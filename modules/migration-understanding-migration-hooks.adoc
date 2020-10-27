@@ -1,8 +1,9 @@
 // Module included in the following assemblies:
-// migration/migrating_3_4/migrating-application-workloads-3-to-4.adoc
-// migration/migrating_4_1_4/migrating-application-workloads-4_1-to-4.adoc
-// migration/migrating_4_2_4/migrating-application-workloads-4_2-to-4.adoc
-= Understanding migration hooks
+// * migration/migrating_3_4/migrating-application-workloads-3-4.adoc
+// * migration/migrating_4_1_4/migrating-application-workloads-4-1-4.adoc
+// * migration/migrating_4_2_4/migrating-application-workloads-4-2-4.adoc
+[id='migration-understanding-migration-hooks_{context}']
+= About migration hooks
 
 You can use migration hooks to run Ansible playbooks at certain points during the migration. The hooks are added when you create a migration plan.
 
@@ -22,6 +23,6 @@ A single migration hook runs on a source or target cluster at one of the followi
 +
 You can assign one hook to each migration step, up to a maximum of four hooks for a single migration plan.
 
-The default `hook-runner` image is `registry.redhat.io/rhcam-1-2/openshift-migration-hook-runner-rhel7`. This image is based on Ansible Runner and includes `python-openshift` for Ansible Kubernetes resources and an updated `oc` binary. You can also create your own hook image with additional Ansible modules or tools.
+The default `hook-runner` image is `registry.redhat.io/rhmtc/openshift-migration-hook-runner-rhel7:v{mtc-version-z}`. This image is based on Ansible Runner and includes `python-openshift` for Ansible Kubernetes resources and an updated `oc` binary. You can also create your own hook image with additional Ansible modules or tools.
 
 The Ansible playbook is mounted on a hook container as a ConfigMap. The hook container runs as a Job on a cluster with a specified service account and namespace. The Job runs, even if the initial Pod is evicted or killed, until it reaches the default `backoffLimit` (`6`) or successful completion.

@@ -1,20 +1,18 @@
 :context: cluster-logging-curator
 [id="cluster-logging-eventrouter"]
-= Working with Event Router
+= Collecting and storing Kubernetes events
 include::modules/common-attributes.adoc[]
 
 toc::[]
 
-The Event Router communicates with the {product-title} and prints {product-title} events to log of the pod where the event occurs. 
+The {product-title} Event Router is a Pod that watches Kubernetes events and logs them for collection by cluster logging. You must manually deploy the Event Router.
 
-If Cluster Logging is deployed, you can view the {product-title} events in Kibana. 
+The Event Router collects events from all projects and writes them to `STDOUT`. Fluentd collects those events and forwards them into the {product-title} Elasticsearch instance. Elasticsearch indexes the events to the `infra` index. 
 
-////
-[NOTE]
+[IMPORTANT]
 ====
-The Event Router is not supported for the Rsyslog log collector.
+The Event Router adds additional load to Fluentd and can impact the number of other log messages that can be processed.
 ====
-////
 
 // The following include statements pull in the module files that comprise
 // the assembly. Include any combination of concept, procedure, or reference
@@ -22,5 +20,3 @@ The Event Router is not supported for the Rsyslog log collector.
 // assemblies.
 
 include::modules/cluster-logging-eventrouter-deploy.adoc[leveloffset=+1]
-
-

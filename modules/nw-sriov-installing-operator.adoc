@@ -1,50 +1,56 @@
 // Module included in the following assemblies:
 //
-// * networking/multiple_networks/configuring-sr-iov.adoc
+// * networking/hardware_networks/installing-sriov-operator.adoc
+
+ifeval::["{product-version}" == "4.2"]
+:run-level:
+endif::[]
+ifeval::["{product-version}" == "4.3"]
+:run-level:
+endif::[]
+ifeval::["{product-version}" == "4.4"]
+:run-level:
+endif::[]
 
 [id="installing-sr-iov-operator_{context}"]
 = Installing SR-IOV Network Operator
 
-As a cluster administrator, you can install the SR-IOV Network Operator using the {product-title} CLI or the web console.
+As a cluster administrator, you can install the SR-IOV Network Operator by using the {product-title} CLI or the web console.
 
 [id="install-operator-cli_{context}"]
-== Installing the Operator using the CLI
+== CLI: Installing the SR-IOV Network Operator
 
 As a cluster administrator, you can install the Operator using the CLI.
 
 .Prerequisites
 
 * A cluster installed on bare-metal hardware with nodes that have hardware that supports SR-IOV.
-* The {product-title} Command-line Interface (CLI), commonly known as `oc`.
-* Log in as a user with `cluster-admin` privileges.
+* Install the OpenShift CLI (`oc`).
+* An account with `cluster-admin` privileges.
 
 .Procedure
 
-. Create a namespace for the SR-IOV Network Operator by completing the following actions:
-
-.. Create the following Namespace Custom Resource (CR) that defines the `openshift-sriov-network-operator` namespace, and then save the YAML in the `sriov-namespace.yaml` file:
+. To create the `openshift-sriov-network-operator` namespace, enter the following command:
 +
+[source,terminal]
 ----
+$ cat << EOF| oc create -f -
 apiVersion: v1
 kind: Namespace
 metadata:
   name: openshift-sriov-network-operator
+ifdef::run-level[]
   labels:
     openshift.io/run-level: "1"
+endif::run-level[]
+EOF
 ----
 
-.. Create the namespace by running the following command:
+. To create an OperatorGroup CR, enter the following command:
 +
+[source,terminal]
 ----
-$ oc create -f sriov-namespace.yaml
-----
-
-. Install the SR-IOV Network Operator in the namespace you created in the previous step by creating the following objects:
-
-.. Create the following OperatorGroup CR and save the YAML in the
-`sriov-operatorgroup.yaml` file:
-+
-----
+$ cat << EOF| oc create -f -
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
@@ -53,80 +59,108 @@ metadata:
 spec:
   targetNamespaces:
   - openshift-sriov-network-operator
+EOF
 ----
 
-.. Create the OperatorGroup CR by running the following command:
-+
-----
-$ oc create -f sriov-operatorgroup.yaml
-----
+. Subscribe to the SR-IOV Network Operator.
 
-.. Run the following command to get the `channel` value required for the next
+.. Run the following command to get the {product-title} major and minor version. It is required for the `channel` value in the next
 step.
 +
+[source,terminal]
 ----
-$ oc get packagemanifest sriov-network-operator -n openshift-marketplace -o jsonpath='{.status.defaultChannel}'
-
-4.4
+$ OC_VERSION=$(oc version -o yaml | grep openshiftVersion | \
+    grep -o '[0-9]*[.][0-9]*' | head -1)
 ----
 
-.. Create the following Subscription CR and save the YAML in the `sriov-sub.yaml` file:
+.. To create a Subscription CR for the SR-IOV Network Operator, enter the following command:
 +
-.Example Subscription
-[source,yaml]
+[source,terminal]
 ----
+$ cat << EOF| oc create -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: sriov-network-operator-subscription
   namespace: openshift-sriov-network-operator
 spec:
-  channel: <channel> <1>
+  channel: "${OC_VERSION}"
   name: sriov-network-operator
-  source: redhat-operators <2>
+  source: redhat-operators
   sourceNamespace: openshift-marketplace
+EOF
 ----
-<1> Specify the value from you obtained in the previous step for the `.status.defaultChannel` parameter.
-<2> You must specify the `redhat-operators` value.
 
-.. Create the Subscription object by running the following command:
+. To verify that the Operator is installed, enter the following command:
 +
+[source,terminal]
 ----
-$ oc create -f sriov-sub.yaml
+$ oc get csv -n openshift-sriov-network-operator \
+  -o custom-columns=Name:.metadata.name,Phase:.status.phase
 ----
-
-.. Change to the `openshift-sriov-network-operator` project:
 +
+.Example output
+[source,terminal]
 ----
-$ oc project openshift-sriov-network-operator
-
-Now using project "openshift-sriov-network-operator"
+Name                                        Phase
+sriov-network-operator.4.4.0-202006160135   Succeeded
 ----
 
 [id="install-operator-web-console_{context}"]
-== Installing the Operator using the web console
+== Web console: Installing the SR-IOV Network Operator
 
 As a cluster administrator, you can install the Operator using the web console.
 
 [NOTE]
 ====
-You have to create the Namespace CR and OperatorGroup CR as mentioned
-in the previous section.
+You must create the OperatorGroup CR by using the CLI.
 ====
+
+.Prerequisites
+
+* A cluster installed on bare-metal hardware with nodes that have hardware that supports SR-IOV.
+* Install the OpenShift CLI (`oc`).
+* An account with `cluster-admin` privileges.
 
 .Procedure
 
-. Install the SR-IOV Network Operator using the {product-title} web console:
+. Create a namespace for the SR-IOV Network Operator:
+
+.. In the {product-title} web console, click *Administration* -> *Namespaces*.
+
+.. Click *Create Namespace*.
+
+.. In the *Name* field, enter `openshift-sriov-network-operator`, and then click *Create*.
+
+ifdef::run-level[]
+.. In the *Filter by name* field, enter `openshift-sriov-network-operator`.
+
+.. From the list of results, click `openshift-sriov-network-operator`, and then click *YAML*.
+
+.. Update the namespace by adding the following stanza to the namespace definition:
++
+[source,yaml]
+----
+  labels:
+    openshift.io/run-level: "1"
+----
+
+.. Click *Save*.
+endif::run-level[]
+
+. Install the SR-IOV Network Operator:
 
 .. In the {product-title} web console, click *Operators* -> *OperatorHub*.
 
-.. Choose  *SR-IOV Network Operator* from the list of available Operators, and then click *Install*.
+.. Select *SR-IOV Network Operator* from the list of available Operators, and then click *Install*.
 
-.. On the *Create Operator Subscription* page, under *A specific namespace on the cluster* select *openshift-sriov-network-operator*. Then, click *Subscribe*.
+.. On the *Install Operator* page, under *A specific namespace on the cluster*, select *openshift-sriov-network-operator*.
 
-. Optional: Verify that the SR-IOV Network Operator installed successfully:
+.. Click *Install*.
 
-.. Switch to the *Operators* -> *Installed Operators* page.
+. Verify that the SR-IOV Network Operator is installed successfully:
+
+.. Navigate to the *Operators* -> *Installed Operators* page.
 
 .. Ensure that *SR-IOV Network Operator* is listed in the *openshift-sriov-network-operator* project with a *Status* of *InstallSucceeded*.
 +
@@ -140,9 +174,10 @@ If the installation later succeeds with an *InstallSucceeded* message, you can i
 If the operator does not appear as installed, to troubleshoot further:
 
 +
-* Go to the *Operators* -> *Installed Operators* page and inspect
-the *Operator Subscriptions* and *Install Plans* tabs for any failure or errors
-under *Status*.
-* Go to the *Workloads* -> *Pods* page and check the logs for Pods in the
+* Inspect the *Operator Subscriptions* and *Install Plans* tabs for any failure or errors under *Status*.
+* Navigate to the *Workloads* -> *Pods* page and check the logs for Pods in the
 `openshift-sriov-network-operator` project.
 
+ifdef::run-level[]
+:!run-level:
+endif::[]

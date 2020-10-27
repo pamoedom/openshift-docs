@@ -24,6 +24,8 @@ that the hostpath provisioner creates.
 
 . Create the MachineConfig file. For example:
 +
+
+[source,terminal]
 ----
 $ touch machineconfig.yaml
 ----
@@ -31,6 +33,7 @@ $ touch machineconfig.yaml
 . Edit the file, ensuring that you include the directory where you want the
 hostpath provisioner to create PVs. For example:
 +
+
 [source,yaml]
 ----
 apiVersion: machineconfiguration.openshift.io/v1
@@ -42,7 +45,7 @@ metadata:
 spec:
   config:
     ignition:
-      version: 2.2.0
+      version: 3.1.0
     systemd:
       units:
         - contents: |
@@ -62,6 +65,8 @@ spec:
 
 . Create the MachineConfig object:
 +
+
+[source,terminal]
 ----
 $ oc create -f machineconfig.yaml -n <namespace>
 ----

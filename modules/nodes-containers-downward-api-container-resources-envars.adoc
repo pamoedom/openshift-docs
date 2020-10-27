@@ -13,7 +13,7 @@ computing resource requests and limits using environment variables.
 To use environment variables:
 
 . When creating a pod configuration, specify environment variables that
-correspond to the contents of the `*resources*` field in the `*spec.container*`
+correspond to the contents of the `resources` field in the `*spec.container*`
 field:
 +
 [source,yaml]
@@ -56,6 +56,7 @@ downward API defaults to the node's CPU and memory allocatable values.
 
 . Create the pod from the `*_pod.yaml_*` file:
 +
+[source,terminal]
 ----
 $ oc create -f pod.yaml
 ----

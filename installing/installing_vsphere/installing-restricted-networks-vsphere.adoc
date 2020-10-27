@@ -1,5 +1,5 @@
 [id="installing-restricted-networks-vsphere"]
-= Installing a cluster on vSphere in a restricted network
+= Installing a cluster on vSphere in a restricted network with user-provisioned infrastructure
 include::modules/common-attributes.adoc[]
 :context: installing-restricted-networks-vsphere
 
@@ -8,13 +8,13 @@ toc::[]
 In {product-title} version {product-version}, you can install a cluster on
 VMware vSphere infrastructure that you provision in a restricted network.
 
-.Prerequisites
+== Prerequisites
 
-* xref:../../installing/install_config/installing-restricted-networks-preparations.adoc#installing-restricted-networks-preparations[Create a mirror registry on your bastion host] and obtain the `imageContentSources` data for your version of {product-title}.
+* xref:../../installing/install_config/installing-restricted-networks-preparations.adoc#installing-restricted-networks-preparations[Create a registry on your mirror host] and obtain the `imageContentSources` data for your version of {product-title}.
 +
 [IMPORTANT]
 ====
-Because the installation media is on the bastion host, use that computer
+Because the installation media is on the mirror host, you can use that computer
 to complete all installation steps.
 ====
 * Provision
@@ -50,7 +50,7 @@ include::modules/ssh-agent-using.adoc[leveloffset=+1]
 
 //You extract the installation program from the mirrored content.
 
-//You install the CLI on the bastion host.
+//You can install the CLI on the mirror host.
 
 include::modules/installation-initializing-manual.adoc[leveloffset=+1]
 
@@ -61,6 +61,8 @@ include::modules/installation-configure-proxy.adoc[leveloffset=+2]
 //include::modules/installation-three-node-cluster.adoc[leveloffset=+2]
 
 include::modules/installation-user-infra-generate-k8s-manifest-ignition.adoc[leveloffset=+1]
+
+include::modules/installation-extracting-infraid.adoc[leveloffset=+1]
 
 include::modules/installation-vsphere-machines.adoc[leveloffset=+1]
 
@@ -78,10 +80,14 @@ include::modules/registry-configuring-storage-vsphere.adoc[leveloffset=+3]
 
 include::modules/installation-registry-storage-non-production.adoc[leveloffset=+3]
 
+include::modules/installation-registry-storage-block-recreate-rollout.adoc[leveloffset=+3]
+
+For instructions about configuring registry storage so that it references the correct PVC, see xref:../../registry/configuring_registry_storage/configuring-registry-storage-vsphere.adoc#registry-configuring-storage-vsphere_configuring-registry-storage-vsphere[Configuring the registry for vSphere].
+
 include::modules/installation-complete-user-infra.adoc[leveloffset=+1]
 
 
-.Next steps
+== Next steps
 
 * xref:../../installing/install_config/customizations.adoc#customizations[Customize your cluster].
 * If necessary, you can

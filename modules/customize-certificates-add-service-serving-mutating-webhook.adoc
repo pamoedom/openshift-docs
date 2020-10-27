@@ -1,6 +1,6 @@
 // Module included in the following assemblies:
 //
-// * authentication/certificates/service-serving-certificate.adoc
+// * security/certificates/service-serving-certificate.adoc
 
 [id="add-service-certificate-mutating-webhook_{context}"]
 = Add the service CA bundle to a MutatingWebhookConfiguration
@@ -16,26 +16,30 @@ Do not set this annotation for admission webhook configurations that need to spe
 
 . Annotate the MutatingWebhookConfiguration with `service.beta.openshift.io/inject-cabundle=true`:
 +
+[source,terminal]
 ----
-$ oc annotate mutatingwebhoookconfigurations <mutatingwebhook-name> \//<1>
+$ oc annotate mutatingwebhookconfigurations <mutatingwebhook-name> \//<1>
      service.beta.openshift.io/inject-cabundle=true
 ----
 <1> Replace `<mutatingwebhook-name>` with the name of the MutatingWebhookConfiguration to annotate.
 +
 For example, use the following command to annotate the MutatingWebhookConfiguration `foo`:
 +
+[source,terminal]
 ----
-$ oc annotate mutatingwebhoookconfigurations foo service.beta.openshift.io/inject-cabundle=true
+$ oc annotate mutatingwebhookconfigurations foo service.beta.openshift.io/inject-cabundle=true
 ----
 
 . View the MutatingWebhookConfiguration to ensure that the service CA bundle has been injected:
 +
+[source,terminal]
 ----
 $ oc get mutatingwebhookconfigurations <mutatingwebhook-name> -o yaml
 ----
 +
 The CA bundle is displayed in the `clientConfig.caBundle` field of all webhooks in the YAML output:
 +
+[source,terminal]
 ----
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration

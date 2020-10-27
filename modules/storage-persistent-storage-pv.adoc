@@ -40,20 +40,27 @@ once it is released.
 // - Ceph RBD
 // - OpenStack Cinder
 - AWS Elastic Block Store (EBS)
-ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
+ifdef::openshift-enterprise,openshift-webscale,openshift-origin,openshift-aro[]
 - Azure Disk
 - Azure File
+endif::openshift-enterprise,openshift-webscale,openshift-origin,openshift-aro[]
+ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 - Cinder
 - Fibre Channel
+endif::openshift-enterprise,openshift-webscale,openshift-origin[]
 - GCE Persistent Disk
+ifdef::openshift-enterprise,openshift-webscale,openshift-origin,openshift-aro[]
 - HostPath
 - iSCSI
 - Local volume
 - NFS
+- OpenStack Manila
 - Red Hat OpenShift Container Storage
+endif::openshift-enterprise,openshift-webscale,openshift-origin,openshift-aro[]
+ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 - VMware vSphere
 // - Local
-endif::[]
+endif::openshift-enterprise,openshift-webscale,openshift-origin[]
 
 [id="pv-capacity_{context}"]
 == Capacity
@@ -131,8 +138,8 @@ the Pods that use these volumes are deleted.
 .Supported access modes for PVs
 [cols=",^v,^v,^v", width="100%",options="header"]
 |===
-|Volume Plug-in  |ReadWriteOnce  |ReadOnlyMany  |ReadWriteMany
-|AWS EBS  | ✅ | - |  -
+|Volume Plug-in  |ReadWriteOnce ^[1]^  |ReadOnlyMany  |ReadWriteMany
+|AWS EBS ^[2]^ | ✅ | - |  -
 ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 |Azure File | ✅ | ✅ | ✅
 |Azure Disk | ✅ | - | -
@@ -146,17 +153,18 @@ ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 |iSCSI  | ✅ | ✅ |  -
 |Local volume | ✅ | - |  -
 |NFS  | ✅ | ✅ | ✅
+|OpenStack Manila  | - | - | ✅
 |Red Hat OpenShift Container Storage  | ✅ | - | ✅
 |VMware vSphere | ✅ | - |  -
 endif::[]
+
 |===
-
-[NOTE]
-====
-Use a recreate deployment strategy for Pods that rely on AWS EBS.
+[.small]
+--
+1. ReadWriteOnce (RWO) volumes cannot be mounted on multiple nodes. If a node fails, the system does not allow the attached RWO volume to be mounted on a new node because it is already assigned to the failed node. If you encounter a multi-attach error message as a result, you can either recover or delete the failed node to make the volume available to other nodes.
+2. Use a recreate deployment strategy for Pods that rely on AWS EBS.
 // GCE Persistent Disks, or Openstack Cinder PVs.
-====
-
+--
 
 ifdef::openshift-dedicated,openshift-online[]
 [id="pv-restrictions_{context}"]
@@ -169,7 +177,7 @@ ifdef::openshift-dedicated[]
  * PVs are provisioned with either EBS volumes (AWS) or GCP storage (GCP),
 depending on where the cluster is provisioned.
  * Only RWO access mode is applicable, as EBS volumes and GCE Persistent
-Disks can not be mounted to multiple nodes.
+Disks cannot be mounted to multiple nodes.
  * *emptyDir* has the same lifecycle as the Pod:
    ** *emptyDir* volumes survive container crashes/restarts.
    ** *emptyDir* volumes are deleted when the Pod is deleted.
@@ -178,7 +186,7 @@ endif::[]
 ifdef::openshift-online[]
  * PVs are provisioned with EBS volumes (AWS).
  * Only RWO access mode is applicable, as EBS volumes and GCE Persistent
-Disks can not be mounted to multiple nodes.
+Disks cannot be mounted to multiple nodes.
  * Docker volumes are disabled.
    ** VOLUME directive without a mapped external volume fails to be
 instantiated
@@ -222,6 +230,7 @@ cluster.
 
 You can view the name of the PVC bound to the PV by running:
 
+[source,terminal]
 ----
 $ oc get pv <pv-claim>
 ----
@@ -236,7 +245,7 @@ You can specify mount options while mounting a PV by using the annotation
 For example:
 
 .Mount options example
-[source, yaml]
+[source,yaml]
 ----
 apiVersion: v1
 kind: PersistentVolume

@@ -9,8 +9,9 @@ To install the `k8s` Ansible module on your local workstation:
 
 .Procedure
 
-. Install Ansible 2.6+:
+. Install Ansible 2.9+:
 +
+[source,terminal]
 ----
 $ sudo yum install ansible
 ----
@@ -19,6 +20,12 @@ $ sudo yum install ansible
 link:https://github.com/openshift/openshift-restclient-python[OpenShift python client]
 package using `pip`:
 +
+[source,terminal]
 ----
-$ pip install openshift
+$ sudo pip install openshift
+----
++
+[source,terminal]
+----
+$ sudo pip install kubernetes
 ----

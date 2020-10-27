@@ -15,6 +15,7 @@ The Local Storage Operator is not installed in {product-title} by default. Use t
 
 . Create the `local-storage` project:
 +
+[source,terminal]
 ----
 $ oc new-project local-storage
 ----
@@ -25,46 +26,35 @@ You might want to use the Local Storage Operator to create volumes on master and
 +
 To allow local storage creation on master and infrastructure nodes, add a toleration to the DaemonSet by entering the following commands:
 +
+[source,terminal]
 ----
 $ oc patch ds local-storage-local-diskmaker -n local-storage -p '{"spec": {"template": {"spec": {"tolerations":[{"operator": "Exists"}]}}}}'
 ----
 +
+[source,terminal]
 ----
 $ oc patch ds local-storage-local-provisioner -n local-storage -p '{"spec": {"template": {"spec": {"tolerations":[{"operator": "Exists"}]}}}}'
 ----
 
 .From the UI
-. Install the Local Storage Operator from the web console.
 
-.. Log in to the {product-title} web console.
+To install the Local Storage Operator from the web console, follow these steps:
 
-.. Navigate to *Operators* -> *OperatorHub*.
+. Log in to the {product-title} web console.
 
-.. Type *Local Storage* into the filter box to locate the Local Storage Operator.
+. Navigate to *Operators* -> *OperatorHub*.
 
-.. Click *Install*.
+. Type *Local Storage* into the filter box to locate the Local Storage Operator.
 
-.. On the *Create Operator Subscription* page, select *A specific namespace on the cluster*. Select *local-storage* from the drop-down menu.
+. Click *Install*.
 
-.. Adjust the values for the *Update Channel* and *Approval Strategy* to the desired values.
+. On the *Install Operator* page, select *A specific namespace on the cluster*. Select *local-storage* from the drop-down menu.
 
-.. Click *Subscribe*.
+. Adjust the values for *Update Channel* and *Approval Strategy* to the values that you want.
 
-. Once finished, the Local Storage Operator will be listed in the *Installed Operators* section of the web console.
+. Click *Install*.
 
-.. Navigate to *Operators* -> *OperatorHub*.
-
-.. Type *Local Storage* into the filter box to locate the Local Storage Operator.
-
-.. Click *Install*.
-
-.. On the *Create Operator Subscription* page, select *A specific namespace on the cluster*. Select *local-storage* from the drop-down menu.
-
-.. Adjust the values for the *Update Channel* and *Approval Strategy* to the desired values.
-
-.. Click *Subscribe*.
-
-. Once finished, the Local Storage Operator will be listed in the *Installed Operators* section of the web console.
+Once finished, the Local Storage Operator will be listed in the *Installed Operators* section of the web console.
 
 .From the CLI
 . Install the Local Storage Operator from the CLI.
@@ -105,6 +95,7 @@ such as `local-storage.yaml`:
 
 . Create the Local Storage Operator object by entering the following command:
 +
+[source,terminal]
 ----
 $ oc apply -f local-storage.yaml
 ----
@@ -115,16 +106,28 @@ At this point, the Operator Lifecycle Manager (OLM) is now aware of the Local St
 
 .. Check that all the required Pods have been created:
 +
+[source,terminal]
 ----
 $ oc -n local-storage get pods
+----
++
+.Example output
+[source,terminal]
+----
 NAME                                      READY   STATUS    RESTARTS   AGE
 local-storage-operator-746bf599c9-vlt5t   1/1     Running   0          19m
 ----
 
 .. Check the ClusterServiceVersion (CSV) YAML manifest to see that the Local Storage Operator is available in the `local-storage` project:
 +
+[source,terminal]
 ----
 $ oc get csvs -n local-storage
+----
++
+.Example output
+[source,terminal]
+----
 NAME                                         DISPLAY         VERSION               REPLACES   PHASE
 local-storage-operator.4.2.26-202003230335   Local Storage   4.2.26-202003230335              Succeeded
 ----

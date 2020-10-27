@@ -19,6 +19,7 @@ You can gather debugging information about your cluster by using the
 
 . Run the `oc adm must-gather` command:
 +
+[source,terminal]
 ----
 $ oc adm must-gather
 ----
@@ -27,11 +28,22 @@ $ oc adm must-gather
 ====
 If this command fails, for example if you cannot schedule a Pod on your cluster, then use the `oc adm inspect` command to gather information for particular resources. Contact Red Hat Support for the recommended resources to gather.
 ====
++
+[NOTE]
+====
+If your cluster is using a restricted network you must import the default must-gather image before running the `oc adm must-gather` command.
+
+[source,terminal]
+----
+$ oc import-image is/must-gather -n openshift
+----
+====
 
 . Create a compressed file from the `must-gather` directory that was just created
 in your working directory. For example, on a computer that uses a Linux
 operating system, run the following command:
 +
+[source,terminal]
 ----
 $ tar cvaf must-gather.tar.gz must-gather.local.5421342344627712289/ <1>
 ----

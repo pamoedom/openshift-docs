@@ -46,9 +46,6 @@ openshift-online:
     enterprise-3.11:
       name: 'Pro'
       dir: online/pro
-    enterprise-4.3:
-      name: 'Starter'
-      dir: online/starter
 openshift-enterprise:
   name: OpenShift Container Platform
   author: OpenShift Documentation Project <openshift-docs@redhat.com>
@@ -107,6 +104,12 @@ openshift-enterprise:
     enterprise-4.4:
       name: '4.4'
       dir: container-platform/4.4
+    enterprise-4.5:
+      name: '4.5'
+      dir: container-platform/4.5
+    enterprise-4.6:
+      name: '4.6'
+      dir: container-platform/4.6
 openshift-dedicated:
   name: OpenShift Dedicated
   author: OpenShift Documentation Project <openshift-docs@redhat.com>
@@ -133,6 +136,26 @@ openshift-aro:
     enterprise-4.3:
       name: '4'
       dir: aro/4
+openshift-moa:
+  name: Amazon Red Hat OpenShift
+  author: OpenShift Documentation Project <openshift-docs@redhat.com>
+  site: commercial
+  site_name: Documentation
+  site_url: https://docs.openshift.com/
+  branches:
+    enterprise-4.5:
+      name: '4'
+      dir: moa/4
+partner-roks:
+  name: Red Hat OpenShift on IBM Cloud
+  author: OpenShift Documentation Project <openshift-docs@redhat.com>
+  site: commercial
+  site_name: Documentation
+  site_url: https://docs.openshift.com/
+  branches:
+    enterprise-4.3:
+      name: '4'
+      dir: roks/4
 openshift-webscale:
   name: OpenShift Container Platform
   author: OpenShift Documentation Project <openshift-docs@redhat.com>
@@ -145,4 +168,7 @@ openshift-webscale:
       dir: container-platform-ocp/4.3
     enterprise-4.4:
       name: '4.4'
-      dir: container-platform-ocp/4.4      
+      dir: container-platform-ocp/4.4
+    enterprise-4.5:
+      name: '4.5'
+      dir: container-platform-ocp/4.5

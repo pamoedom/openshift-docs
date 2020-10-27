@@ -3,22 +3,22 @@
 // * logging/cluster-logging-curator.adoc
 
 [id="cluster-logging-curator-troubleshoot_{context}"]
-= Troubleshooting Curator
+= Troubleshooting  log curation
 
-You can use information in this section for debugging Curator. For example, if curator is in failed state, but the log messages do not
+You can use information in this section for debugging log curation. For example, if curator is in a failed state, but the log messages do not
 provide a reason, you could increase the log level and trigger a new job, instead of waiting for another scheduled run of the cron job.
 
 .Prerequisites
 
-Cluster logging and Elasticsearch must be installed.
+* Cluster logging and Elasticsearch must be installed.
 
 .Procedure
 
-Enable the Curator debug log and trigger next Curator iteration manually
+To enable the Curator debug log and trigger next Curator iteration manually:
 
 . Enable debug log of Curator:
-
 +
+[source,terminal]
 ----
 $ oc set env cronjob/curator CURATOR_LOG_LEVEL=DEBUG CURATOR_SCRIPT_LOG_LEVEL=DEBUG
 ----
@@ -26,13 +26,13 @@ $ oc set env cronjob/curator CURATOR_LOG_LEVEL=DEBUG CURATOR_SCRIPT_LOG_LEVEL=DE
 Specify the log level:
 +
 * *CRITICAL*. Curator displays only critical messages.
-* *ERROR*. Curator displays only  error and critical messages.
-* *WARNING*. Curator displays only  error, warning, and critical messages.
+* *ERROR*. Curator displays only error and critical messages.
+* *WARNING*. Curator displays only error, warning, and critical messages.
 * *INFO*. Curator displays only informational, error, warning, and critical messages.
 * *DEBUG*. Curator displays only debug messages, in addition to all of the above.
 +
 The default value is INFO.
-
++
 [NOTE]
 ====
 Cluster logging uses the {product-title} custom environment variable `CURATOR_SCRIPT_LOG_LEVEL` in {product-title} wrapper scripts (`run.sh` and `convert.py`).
@@ -41,27 +41,30 @@ The environment variable takes the same values as `CURATOR_LOG_LEVEL` for script
 
 . Trigger next curator iteration:
 +
+[source,terminal]
 ----
 $ oc create job --from=cronjob/curator <job_name>
 ----
-+
 
 . Use the following commands to control the CronJob:
 
 ** Suspend a CronJob:
 +
+[source,terminal]
 ----
 $ oc patch cronjob curator -p '{"spec":{"suspend":true}}'
 ----
 
 ** Resume a CronJob:
 +
+[source,terminal]
 ----
 $ oc patch cronjob curator -p '{"spec":{"suspend":false}}'
 ----
 
 ** Change a CronJob schedule:
 +
+[source,terminal]
 ----
 $ oc patch cronjob curator -p '{"spec":{"schedule":"0 0 * * *"}}' <1>
 ----

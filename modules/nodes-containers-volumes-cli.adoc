@@ -12,6 +12,7 @@ object that has a pod template.
 
 The `oc set volume` command uses the following general syntax:
 
+[source,terminal]
 ----
 $ oc set volume <object_selection> <operation> <mandatory_parameters> <options>
 ----
@@ -54,7 +55,7 @@ selector.
 
 
 Operation::
-Specify `--add`, `--remove`, or `--list` for `operation` in the `oc set volume` command.
+Specify `--add` or `--remove` for `operation` in the `oc set volume` command.
 
 Mandatory parameters::
 Any `_<mandatory_parameters>_` are specific to the

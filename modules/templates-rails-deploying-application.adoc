@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// * assembly/images
+// * openshift_images/templates-ruby-on-rails.adoc
 
 [id="templates-rails-deploying-application_{context}"]
 = Deploying your application to {product-title}
@@ -22,6 +22,7 @@ ifdef::openshift-enterprise,openshift-webscale,openshift-origin,openshift-dedica
 * To deploy your Ruby on Rails application, create a new Project for the
 application:
 +
+[source,terminal]
 ----
 $ oc new-project rails-app --description="My Rails application" --display-name="Rails Application"
 ----

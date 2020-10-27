@@ -1,6 +1,7 @@
 // Module included in the following assemblies:
 //
 // * scalability_and_performance/what-huge-pages-do-and-how-they-are-consumed-by-apps.adoc
+// * post_installation_configuration/node-tasks.adoc
 
 [id="how-huge-pages-are-consumed-by-apps_{context}"]
 = How huge pages are consumed by apps
@@ -14,6 +15,7 @@ notation using integer values supported on a particular node. For example, if a
 node supports 2048KiB page sizes, it exposes a schedulable resource
 `hugepages-2Mi`. Unlike CPU or memory, huge pages do not support over-commitment.
 
+[source,yaml]
 ----
 apiVersion: v1
 kind: Pod

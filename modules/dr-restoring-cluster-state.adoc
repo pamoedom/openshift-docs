@@ -1,11 +1,13 @@
 // Module included in the following assemblies:
 //
 // * disaster_recovery/scenario-2-restoring-cluster-state.adoc
+// * post_installation_configuration/cluster-tasks.adoc
+
 
 [id="dr-scenario-2-restoring-cluster-state_{context}"]
 = Restoring to a previous cluster state
 
-You can use a saved etcd backup to restore back to a previous cluster state. You use the etcd backup to restore a single master host. Then the etcd cluster Operator handles scaling to the remaining master hosts.
+You can use a saved etcd backup to restore back to a previous cluster state. You use the etcd backup to restore a single control plane host. Then the etcd cluster Operator handles scaling to the remaining master hosts.
 
 .Prerequisites
 
@@ -15,59 +17,72 @@ You can use a saved etcd backup to restore back to a previous cluster state. You
 
 .Procedure
 
-. Select a master host to use as the recovery host. This is the host that you will run the restore operation on.
+. Select a control plane host to use as the recovery host. This is the host that you will run the restore operation on.
 
-. Establish SSH connectivity to each of the master nodes, including the recovery host.
+. Establish SSH connectivity to each of the control plane nodes, including the recovery host.
 +
-The Kubernetes API server will become inaccessible once the restore process has started, so you cannot access the master nodes. For this reason, it is recommended to establish SSH connectivity to each master host in a separate terminal.
+The Kubernetes API server becomes inaccessible after the restore process starts, so you cannot access the control plane nodes. For this reason, it is recommended to establish SSH connectivity to each control plane host in a separate terminal.
 +
 [IMPORTANT]
 ====
-If you do not complete this step, you will not be able to access the recovery host to complete the restore procedure, and you will be unable to recover your cluster from this state.
+If you do not complete this step, you will not be able to access the master hosts to complete the restore procedure, and you will be unable to recover your cluster from this state.
 ====
 
-. Copy the etcd backup directory to the recovery master host.
+. Copy the etcd backup directory to the recovery control plane host.
 +
-This procedure assumes that you copied the `backup` directory containing the etcd snapshot and the resources for the static Pods to the `/home/core/` directory of your recovery master host.
+This procedure assumes that you copied the `backup` directory containing the etcd snapshot and the resources for the static Pods to the `/home/core/` directory of your recovery control plane host.
 
-. Stop the static Pods on all other master nodes.
+. Stop the static Pods on all other control plane nodes.
 +
 [NOTE]
 ====
 It is not required to manually stop the Pods on the recovery host. The recovery script will stop the Pods on the recovery host.
 ====
 
-.. Access a master host that is not the recovery host.
+.. Access a control plane host that is not the recovery host.
 
 .. Move the existing etcd Pod file out of the kubelet manifest directory:
 +
+[source,terminal]
 ----
 [core@ip-10-0-154-194 ~]$ sudo mv /etc/kubernetes/manifests/etcd-pod.yaml /tmp
 ----
 
 .. Verify that the etcd Pods are stopped.
 +
+[source,terminal]
 ----
 [core@ip-10-0-154-194 ~]$ sudo crictl ps | grep etcd
 ----
 +
-The output of this command should be empty.
+The output of this command should be empty. If it is not empty, wait a few minutes and check again.
 
 .. Move the existing Kubernetes API server Pod file out of the kubelet manifest directory:
 +
+[source,terminal]
 ----
 [core@ip-10-0-154-194 ~]$ sudo mv /etc/kubernetes/manifests/kube-apiserver-pod.yaml /tmp
 ----
 
+.. Verify that the Kubernetes API server Pods are stopped.
++
+[source,terminal]
+----
+[core@ip-10-0-154-194 ~]$ sudo crictl ps | grep kube-apiserver
+----
++
+The output of this command should be empty. If it is not empty, wait a few minutes and check again.
+
 .. Move the etcd data directory to a different location:
 +
+[source,terminal]
 ----
 [core@ip-10-0-154-194 ~]$ sudo mv /var/lib/etcd/ /tmp
 ----
 
 .. Repeat this step on each of the other master hosts that is not the recovery host.
 
-. Access the recovery master host.
+. Access the recovery control plane host.
 
 
 . If the cluster-wide proxy is enabled, be sure that you have exported the `NO_PROXY`, `HTTP_PROXY`, and `HTTPS_PROXY` environment variables.
@@ -77,10 +92,16 @@ The output of this command should be empty.
 You can check whether the proxy is enabled by reviewing the output of `oc get proxy cluster -o yaml`. The proxy is enabled if the `httpProxy`, `httpsProxy`, and `noProxy` fields have values set.
 ====
 
-. Run the restore script on the recovery master host and pass in the path to the etcd backup directory:
+. Run the restore script on the recovery control plane host and pass in the path to the etcd backup directory:
 +
+[source,terminal]
 ----
 [core@ip-10-0-143-125 ~]$ sudo -E /usr/local/bin/cluster-restore.sh /home/core/backup
+----
++
+.Example script output
+[source,terminal]
+----
 ...stopping kube-scheduler-pod.yaml
 ...stopping kube-controller-manager-pod.yaml
 ...stopping etcd-pod.yaml
@@ -107,30 +128,53 @@ starting kube-scheduler-pod.yaml
 static-pod-resources/kube-scheduler-pod-8/kube-scheduler-pod.yaml
 ----
 
+. Restart the kubelet service on all master hosts.
+
+.. From the recovery host, run the following command:
++
+[source,terminal]
+----
+[core@ip-10-0-143-125 ~]$ sudo systemctl restart kubelet.service
+----
+
+.. Repeat this step on all other master hosts.
+
 . Verify that the single member control plane has started successfully.
 
 .. From the recovery host, verify that the etcd container is running.
 +
+[source,terminal]
 ----
 [core@ip-10-0-143-125 ~]$ sudo crictl ps | grep etcd
+----
++
+.Example output
+[source,terminal]
+----
 3ad41b7908e32       36f86e2eeaaffe662df0d21041eb22b8198e0e58abeeae8c743c3e6e977e8009                                                         About a minute ago   Running             etcd                                          0                   7c05f8af362f0
 ----
 
 .. From the recovery host, verify that the etcd Pod is running.
 +
+[source,terminal]
 ----
 [core@ip-10-0-143-125 ~]$ oc get pods -n openshift-etcd | grep etcd
-
+----
++
+.Example output
+[source,terminal]
+----
 NAME                                             READY   STATUS      RESTARTS   AGE
 etcd-ip-10-0-143-125.ec2.internal                1/1     Running     1          2m47s
 ----
 +
-If the status is `Pending`, wait a few minutes and try again.
+If the status is `Pending`, or the output lists more than one running etcd Pod, wait a few minutes and check again.
 
 . Force etcd redeployment.
 +
 In a terminal that has access to the cluster as a `cluster-admin` user, run the following command:
 +
+[source,terminal]
 ----
 $ oc patch etcd cluster -p='{"spec": {"forceRedeploymentReason": "recovery-'"$( date --rfc-3339=ns )"'"}}' --type=merge <1>
 ----
@@ -142,12 +186,14 @@ When the etcd cluster Operator performs a redeployment, the existing nodes are s
 +
 In a terminal that has access to the cluster as a `cluster-admin` user, run the following command:
 +
+[source,terminal]
 ----
 $ oc get etcd -o=jsonpath='{range .items[0].status.conditions[?(@.type=="NodeInstallerProgressing")]}{.reason}{"\n"}{.message}{"\n"}'
 ----
 +
 Review the `NodeInstallerProgressing` status condition for etcd to verify that all nodes are at the latest revision. The output shows `AllNodesAtLatestRevision` upon successful update:
 +
+[source,terminal]
 ----
 AllNodesAtLatestRevision
 3 nodes are at revision 3
@@ -161,18 +207,21 @@ In a terminal that has access to the cluster as a `cluster-admin` user, run the 
 
 .. Update the `kubeapiserver`:
 +
+[source,terminal]
 ----
 $ oc patch kubeapiserver cluster -p='{"spec": {"forceRedeploymentReason": "recovery-'"$( date --rfc-3339=ns )"'"}}' --type=merge
 ----
 +
 Verify all nodes are updated to the latest revision.
 +
+[source,terminal]
 ----
 $ oc get kubeapiserver -o=jsonpath='{range .items[0].status.conditions[?(@.type=="NodeInstallerProgressing")]}{.reason}{"\n"}{.message}{"\n"}'
 ----
 +
 Review the `NodeInstallerProgressing` status condition to verify that all nodes are at the latest revision. The output shows `AllNodesAtLatestRevision` upon successful update:
 +
+[source,terminal]
 ----
 AllNodesAtLatestRevision
 3 nodes are at revision 3
@@ -180,18 +229,21 @@ AllNodesAtLatestRevision
 
 .. Update the `kubecontrollermanager`:
 +
+[source,terminal]
 ----
 $ oc patch kubecontrollermanager cluster -p='{"spec": {"forceRedeploymentReason": "recovery-'"$( date --rfc-3339=ns )"'"}}' --type=merge
 ----
 +
 Verify all nodes are updated to the latest revision.
 +
+[source,terminal]
 ----
 $ oc get kubecontrollermanager -o=jsonpath='{range .items[0].status.conditions[?(@.type=="NodeInstallerProgressing")]}{.reason}{"\n"}{.message}{"\n"}'
 ----
 +
 Review the `NodeInstallerProgressing` status condition to verify that all nodes are at the latest revision. The output shows `AllNodesAtLatestRevision` upon successful update:
 +
+[source,terminal]
 ----
 AllNodesAtLatestRevision
 3 nodes are at revision 3
@@ -199,18 +251,21 @@ AllNodesAtLatestRevision
 
 .. Update the `kubescheduler`:
 +
+[source,terminal]
 ----
 $ oc patch kubescheduler cluster -p='{"spec": {"forceRedeploymentReason": "recovery-'"$( date --rfc-3339=ns )"'"}}' --type=merge
 ----
 +
 Verify all nodes are updated to the latest revision.
 +
+[source,terminal]
 ----
 $ oc get kubescheduler -o=jsonpath='{range .items[0].status.conditions[?(@.type=="NodeInstallerProgressing")]}{.reason}{"\n"}{.message}{"\n"}'
 ----
 +
 Review the `NodeInstallerProgressing` status condition to verify that all nodes are at the latest revision. The output shows `AllNodesAtLatestRevision` upon successful update:
 +
+[source,terminal]
 ----
 AllNodesAtLatestRevision
 3 nodes are at revision 3
@@ -220,8 +275,14 @@ AllNodesAtLatestRevision
 +
 In a terminal that has access to the cluster as a `cluster-admin` user, run the following command:
 +
+[source,terminal]
 ----
 $ oc get pods -n openshift-etcd | grep etcd
+----
++
+.Example output
+[source,terminal]
+----
 etcd-ip-10-0-143-125.ec2.internal                2/2     Running     0          9h
 etcd-ip-10-0-154-194.ec2.internal                2/2     Running     0          9h
 etcd-ip-10-0-173-171.ec2.internal                2/2     Running     0          9h

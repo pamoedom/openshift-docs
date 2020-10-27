@@ -1,6 +1,7 @@
 // Module included in the following assemblies:
 //
 // * openshift_images/image-configuration.adoc
+// * post_installation_configuration/preparing-for-users.adoc
 
 [id="images-configuration-file_{context}"]
 = Configuring image settings
@@ -15,6 +16,7 @@ and reboots the nodes when it detects changes.
 
 . Edit the `image.config.openshift.io/cluster` custom resource:
 +
+[source,terminal]
 ----
 $ oc edit image.config.openshift.io/cluster
 ----
@@ -60,13 +62,13 @@ administrators will have the appropriate permissions.
 should be trusted during `ImageStream import`, `pod image pull`,
 `openshift-image-registry pullthrough`, and builds. The namespace for this ConfigMap is
 `openshift-config`. The format of the ConfigMap is to use the registry hostname
-as the key, and the base64-encoded certificate as the value, for each additional
-registry CA to trust.
+as the key, and the PEM certificate as the value, for each additional registry CA to
+trust.
 <4> `registrySources`: Contains configuration that determines how the container
 runtime should treat individual registries when accessing images for builds and
 pods. For instance, whether or not to allow insecure access. It does not contain
 configuration for the internal cluster registry.
 <5> `insecureRegistries`: Registries which do not have a valid TLS certificate or
 only support HTTP connections.
-<6> `blockedRegistries`: Blacklisted for image pull and push actions. All other
+<6> `blockedRegistries`: Denylisted for image pull and push actions. All other
 registries are allowed.

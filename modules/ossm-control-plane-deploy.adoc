@@ -1,6 +1,6 @@
 // Module included in the following assemblies:
 //
-// * service_mesh/service_mesh_install/installing-ossm.adoc
+// * service_mesh/v2x/installing-ossm.adoc
 
 [id="ossm-control-plane-deploy_{context}"]
 = Deploying the {ProductName} control plane
@@ -74,32 +74,36 @@ Follow this procedure to deploy the {ProductName} control plane the command line
 * The {ProductName} Operator must be installed.
 * Review the instructions for how to customize the {ProductName} installation.
 * An account with the `cluster-admin` role.
-* Access to the {product-title} Command-line Interface (CLI), commonly known as `oc`.
+* Access to the OpenShift CLI (`oc`).
 
 .Procedure
 
 . Log in to the {product-title} CLI as a user with the `cluster-admin` role.
 +
+[source,terminal]
 ----
 $ oc login https://{HOSTNAME}:6443
 ----
 
 . Create a project named `istio-system`.
 +
+[source,terminal]
 ----
 $ oc new-project istio-system
 ----
 
-. Create a `ServiceMeshControlPlane` file named `istio-installation.yaml` using the full example found in "Customize the {ProductName} installation". You can customize the values as needed to match your use case. For production, you _must_ change the default Jaeger template.
+. Create a `ServiceMeshControlPlane` file named `istio-installation.yaml` using the example found in "Customize the {ProductName} installation". You can customize the values as needed to match your use case.  For production deployments you _must_ change the default Jaeger template.
 
 . Run the following command to deploy the control plane:
 +
+[source,terminal]
 ----
 $ oc create -n istio-system -f istio-installation.yaml
 ----
 +
 . Execute the following command to see the status of the control plane installation.
 +
+[source,terminal]
 ----
 $ oc get smcp -n istio-system
 ----
@@ -119,6 +123,8 @@ $ oc get pods -n istio-system -w
 +
 You should see output similar to the following:
 +
+.Example output
+[source,terminal]
 ----
 NAME                                     READY   STATUS             RESTARTS   AGE
 grafana-7bf5764d9d-2b2f6                 2/2     Running            0          28h
@@ -131,6 +137,6 @@ istio-policy-77fd498655-7pvjw            2/2     Running            0          2
 istio-sidecar-injector-df45bd899-ctxdt   1/1     Running            0          28h
 istio-telemetry-66f697d6d5-cj28l         2/2     Running            0          28h
 jaeger-896945cbc-7lqrr                   2/2     Running            0          11h
-kiali-78d9c5b87c-snjzh                   0/1     Running            0          22h
+kiali-78d9c5b87c-snjzh                   1/1     Running            0          22h
 prometheus-6dff867c97-gr2n5              2/2     Running            0          28h
 ----

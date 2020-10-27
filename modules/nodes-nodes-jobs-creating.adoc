@@ -39,7 +39,7 @@ spec:
 2. Optionally, specify how many successful pod completions are needed to mark a job completed.
 * For non-parallel jobs, leave unset. When unset, defaults to `1`.
 * For parallel jobs with a fixed completion count, specify the number of completions.
-* For parallel jobs with a work queue, leave unset. When unset defaults to the `parallelism` value. 
+* For parallel jobs with a work queue, leave unset. When unset defaults to the `parallelism` value.
 3. Optionally, specify the maximum duration the job can run.
 4. Optionally, specify the number of retries for a job. This field defaults to six.
 5. Specify the template for the pod the controller creates.
@@ -47,22 +47,23 @@ spec:
 * `Never`. Do not restart the job.
 * `OnFailure`. Restart the job only if it fails.
 * `Always`. Always restart the job.
-
++
 For details on how {product-title} uses restart policy with failed containers, see
 the link:https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#example-states[Example States] in the Kubernetes documentation.
 
 . Create the job:
 +
+[source,terminal]
 ----
 $ oc create -f <file-name>.yaml
 ----
 
 [NOTE]
 ====
-You can also create and launch a job from a single command using `oc run`. The following command creates and launches the same job as specified in the previous example:
+You can also create and launch a job from a single command using `oc create job`. The following command creates and launches a job similar to the one specified in the previous example:
 
+[source,terminal]
 ----
-$ oc run pi --image=perl --replicas=1  --restart=OnFailure \
-    --command -- perl -Mbignum=bpi -wle 'print bpi(2000)'
+$ oc create job pi --image=perl -- perl -Mbignum=bpi -wle 'print bpi(2000)'
 ----
 ====

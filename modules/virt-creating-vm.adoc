@@ -16,6 +16,7 @@ the relevant PVC `claimName` as a volume.
 
 . To create a virtual machine with the {product-title} client, run this command:
 +
+[source,terminal]
 ----
 $ oc create -f <vm.yaml>
 ----
@@ -31,6 +32,7 @@ ReplicaSet is not currently supported in {VirtProductName}.
 
 
 
+[caption=]
 .Domain settings
 |===
 |Setting | Description
@@ -45,6 +47,7 @@ ReplicaSet is not currently supported in {VirtProductName}.
 |The name of the volume that is referenced. Must match the name of a volume.
 |===
 
+[caption=]
 .Volume settings
 |===
 |Setting | Description

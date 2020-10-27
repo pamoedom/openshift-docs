@@ -5,7 +5,20 @@ include::modules/common-attributes.adoc[]
 
 toc::[]
 
-You can customize and install a cluster on {rh-virtualization-first}. The installation program uses installer-provisioned infrastructure to automate creating and deploying the cluster.
+[WARNING]
+====
+Due to a known issue with installing {product-title} versions 4.4 and 4.5 on {rh-virtualization-first} 4.4.1, you must customize `install-config.yaml` as described in link:https://access.redhat.com/solutions/5374251[Openshift IPI installation on {rh-virtualization}-4.x failed with "Error: timeout while waiting for state to become 'up' (last state: 'down', timeout: 10m0s)"]. This defect is fixed in {rh-virtualization} 4.4.2.
+====
+
+[WARNING]
+====
+Installing {product-title} version 4.6 on {rh-virtualization-first} requires {rh-virtualization} version 4.4. If you are running an earlier version of {product-title} on {rh-virtualization} 4.3, do not update it to {product-title} version 4.6. Red Hat has not tested running {product-title} version 4.6 on {rh-virtualization} version 4.3 and does not support this combination. For more information, see link:https://access.redhat.com/articles/4763741[{product-title} 4.x Tested Integrations (for x86_x64)].
+====
+You can customize and install an {product-title} cluster on {rh-virtualization-first}, similar to the one shown in the following diagram.
+
+image::92_OpenShift_Cluster_Install_RHV_0520.png[Diagram of an {product-title} cluster on a {rh-virtualization} cluster]
+
+The installation program uses installer-provisioned infrastructure to automate creating and deploying the cluster.
 
 To install a customized cluster, you prepare the environment and perform the following steps:
 
@@ -23,19 +36,13 @@ For an alternative to installing a customized cluster, see xref:../../installing
 This installation program is available for Linux and macOS only.
 ====
 
-.Prerequisites
+== Prerequisites
 
 * Review details about the
 xref:../../architecture/architecture-installation.adoc#architecture-installation[{product-title} installation and update]
 processes.
 * If you use a firewall,
 xref:../../installing/install_config/configuring-firewall.adoc#configuring-firewall[configure it to allow the sites] that your cluster requires access to.
-* xref:../../installing/installing_rhv/installing-rhv-creating-custom-vm.adoc#installing-rhv-creating-custom-vm[Create a custom virtual machine template on {rh-virtualization}].
-
-[IMPORTANT]
-====
-Creating a custom virtual machine template for {rh-virtualization} is a workaround for a known issue (link:https://bugzilla.redhat.com/show_bug.cgi?id=1818577[*BZ#1818577*]). If you do not create a custom virtual machine, the {product-title} cluster you install will fail.
-====
 
 include::modules/cluster-entitlements.adoc[leveloffset=+1]
 
@@ -53,10 +60,9 @@ include::modules/installation-obtaining-installer.adoc[leveloffset=+1]
 
 include::modules/installation-initializing.adoc[leveloffset=+1]
 
-// The RHV installer for 4.4 GA has not been implemented or tested support for most configuration parameters. This will be fixed in an upcoming z-stream. When that happens, (1) uncomment the following line, (2) update the contents of the included file to display RHV-supported parameters, and (3) remove this comment.
-// include::modules/installation-configuration-parameters.adoc[leveloffset=+1]
+include::modules/installing-rhv-config-yaml.adoc[leveloffset=+2]
 
-include::modules/installing-rhv-config-yaml.adoc[leveloffset=+1]
+include::modules/installation-configuration-parameters.adoc[leveloffset=+2]
 
 include::modules/installation-launching-installer.adoc[leveloffset=+1]
 
@@ -87,7 +93,7 @@ After the {product-title} cluster initializes, you can perform the following tas
 * Optional: After deployment, add or replace SSH keys using the Machine Config Operator (MCO) in {product-title}.
 * Optional: Remove the `kubeadmin` user. Instead, use the authentication provider to create a user with cluster-admin privileges.
 
-.Next steps
+== Next steps
 
 * xref:../../installing/install_config/customizations.adoc#customizations[Customize your cluster].
 * If necessary, you can

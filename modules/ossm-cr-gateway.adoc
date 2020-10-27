@@ -1,6 +1,7 @@
 // Module included in the following assemblies:
 //
-// * service_mesh/service_mesh_install/customizing-installation-ossm.adoc
+// * service_mesh/v1x/customizing-installation-ossm.adoc
+// * service_mesh/v2x/customizing-installation-ossm.adoc
 
 [id="ossm-cr-gateway_{context}"]
 = Istio gateway configuration
@@ -19,6 +20,7 @@ Here is an example that illustrates the Istio gateway parameters for the `Servic
          autoscaleEnabled: false
          autoscaleMin: 1
          autoscaleMax: 5
+         ior_enabled: true
 ----
 
 
@@ -62,7 +64,9 @@ Here is an example that illustrates the Istio gateway parameters for the `Servic
 |A valid number of allocatable pods based on your environment's configuration.
 |`5`
 
+|
 |`ior_enabled`
 |Controls whether Automatic Route Creation is enabled.
-|false
+|`true`/`false`
+|`false`
 |===

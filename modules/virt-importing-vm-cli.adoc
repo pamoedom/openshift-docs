@@ -1,0 +1,211 @@
+// Module included in the following assemblies:
+//
+// * virt/virtual_machines/importing_vms/virt-importing-rhv-vm.adoc
+
+[id="virt-importing-vm-cli_{context}"]
+= Importing a Red Hat Virtualization virtual machine with the CLI
+
+You can import a Red Hat Virtualization (RHV) virtual machine with the CLI by creating the Secret and VirtualMachineImport Custom Resources (CRs). The Secret CR stores the RHV Manager credentials and CA certificate. The VirtualMachineImport CR defines the parameters of the VM import process.
+
+Optional: You can create a ResourceMapping CR that is separate from the VirtualMachineImport CR. A ResourceMapping CR provides greater flexibility, for example, if you import additional RHV VMs.
+
+[IMPORTANT]
+====
+The default target storage class must be NFS. Cinder does not support RHV VM import. See link:https://bugzilla.redhat.com/show_bug.cgi?id=1856439[(*BZ#1856439*)].
+====
+
+.Procedure
+
+. Create the Secret CR by running the following command:
++
+[source,yaml]
+----
+$ cat <<EOF | oc create -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rhv-credentials
+  namespace: default <1>
+type: Opaque
+stringData:
+  ovirt: |
+    apiUrl: "https://<RHVM-FQDN>:8443/ovirt-engine/api" <2>
+    username: admin@internal
+    password: <3>
+    caCert: |
+      -----BEGIN CERTIFICATE-----
+      <4>
+      -----END CERTIFICATE-----
+EOF
+----
+<1> Optional. You can specify a different namespace in all the CRs.
+<2> Specify the FQDN of the RHV Manager.
+<3> Specify the password for `admin@internal`.
+<4> Specify the RHV Manager CA certificate. You can obtain the CA certificate by running the following command:
++
+[source,terminal]
+----
+$ openssl s_client -connect :443 -showcerts < /dev/null
+----
+
+. Optional: Create the ResourceMapping CR if you want to separate the resource mapping from the VirtualMachineImport CR by running the following command:
++
+ifeval::["{VirtVersion}" < "2.5"]
+[source,yaml]
+----
+$ cat <<EOF | kubectl create -f -
+apiVersion: v2v.kubevirt.io/v1alpha1
+kind: ResourceMapping
+metadata:
+  name: resourcemapping-example
+  namespace: default
+spec:
+  ovirt:
+    networkMappings:
+      - source:
+          name: <rhv-logical-network>/<vnic-profile> <1>
+        target:
+          name: <target-network> <2>
+        type: pod
+    storageMappings: <3>
+      - source:
+          name: <rhv-storage-domain> <4>
+        target:
+          name: <target-storage-class> <5>
+EOF
+----
+<1> Specify the RHV logical network and vNIC profile.
+<2> Specify the {VirtProductName} network.
+<3> If `storageMappings` are specified in both the ResourceMapping and the VirtualMachineImport CRs, the VirtualMachineImport CR takes precedence.
+<4> Specify the RHV storage domain.
+<5> The default storage class must be `nfs`.
+endif::[]
+ifeval::["{VirtVersion}" >= "2.5"]
+[source,yaml]
+----
+$ cat <<EOF | kubectl create -f -
+apiVersion: v2v.kubevirt.io/v1alpha1
+kind: ResourceMapping
+metadata:
+  name: resourcemapping-example
+  namespace: default
+spec:
+  ovirt:
+    networkMappings:
+      - source:
+          name: <rhv-logical-network>/<vnic-profile> <1>
+        target:
+          name: <target-network> <2>
+        type: pod
+    storageMappings: <3>
+      - source:
+          name: <rhv-storage-domain> <4>
+        target:
+          name: <target-storage-class> <5>
+        volumeMode: <volume-mode> <6>
+EOF
+----
+<1> Specify the RHV logical network and vNIC profile.
+<2> Specify the {VirtProductName} network.
+<3> If `storageMappings` are specified in both the ResourceMapping and the VirtualMachineImport CRs, the VirtualMachineImport CR takes precedence.
+<4> Specify the RHV storage domain.
+<5> Specify the target storage class as `nfs` or `ocs-storagecluster-ceph-rbd`.
+<6> Specify the volume mode as `Block` or `Filesystem`. If you specified the `ocs-storagecluster-ceph-rbd` storage class, you must specify the `Block` volume mode.
+endif::[]
+
+. Create the VirtualMachineImport CR by running the following command:
++
+[source,yaml]
+----
+$ cat <<EOF | oc create -f -
+apiVersion: v2v.kubevirt.io/v1alpha1
+kind: VirtualMachineImport
+metadata:
+  name: vm-import
+  namespace: default
+spec:
+  providerCredentialsSecret:
+    name: rhv-credentials
+    namespace: default
+# resourceMapping: <1>
+#   name: resourcemapping-example
+#   namespace: default
+  targetVmName: vm-example <2>
+  startVm: true
+  source:
+    ovirt:
+      vm:
+        id: <source-vm-id> <3>
+        name: <source-vm-name> <4>
+      cluster:
+        name: <source-cluster-name> <5>
+      mappings: <6>
+        networkMappings:
+          - source:
+              name: <source-logical-network>/<vnic-profile> <7>
+            target:
+              name: <target-network> <8>
+            type: pod
+        storageMappings: <9>
+          - source:
+              name: <source-storage-domain> <10>
+            target:
+              name: <target-storage-class> <11>
+        diskMappings:
+          - source:
+              id: <source-vm-disk-id> <12>
+            target:
+              name: <target-storage-class> <13>
+EOF
+----
+<1> If you create a ResourceMapping CR, uncomment the `resourceMapping` section.
+<2> Specify the target VM name.
+<3> The UUID of the source VM. If you specify the source VM ID, for example, `80554327-0569-496b-bdeb-fcbbf52b827b`, the source VM name and cluster are ignored. Alternatively, you can specify the source VM name and cluster.
+<4> If you specify the source VM name, you must also specify the source cluster. Do not specify the source VM ID.
+<5> If you specify the source cluster, you must also specify the source VM name. Do not specify the source VM ID.
+<6> If you create a ResourceMapping CR, comment out the `mappings` section.
+<7> Specify the logical network and vNIC profile of the source VM.
+<8> Specify the {VirtProductName} network.
+<9> If `storageMappings` are specified in both the ResourceMapping and the VirtualMachineImport CRs, the VirtualMachineImport CR takes precedence.
+<10> Specify the source storage domain.
+<11> Specify the target storage class.
+<12> Specify the source VM disk UUID, for example, `8181ecc1-5db8-4193-9c92-3ddab3be7b05`.
+<13> Specify the target storage class.
+
+. Follow the progress of the virtual machine import to verify that the import was successful:
++
+[source,terminal]
+----
+$ oc get vmimports vm-import -n default
+----
++
+The output indicating a successful import resembles the following example:
++
+.Example output
+[source,yaml]
+----
+...
+status:
+  conditions:
+  - lastHeartbeatTime: "2020-07-22T08:58:52Z"
+    lastTransitionTime: "2020-07-22T08:58:52Z"
+    message: Validation completed successfully
+    reason: ValidationCompleted
+    status: "True"
+    type: Valid
+  - lastHeartbeatTime: "2020-07-22T08:58:52Z"
+    lastTransitionTime: "2020-07-22T08:58:52Z"
+    message: 'VM specifies IO Threads: 1, VM has NUMA tune mode specified: interleave'
+    reason: MappingRulesVerificationReportedWarnings
+    status: "True"
+    type: MappingRulesVerified
+  - lastHeartbeatTime: "2020-07-22T08:58:56Z"
+    lastTransitionTime: "2020-07-22T08:58:52Z"
+    message: Copying virtual machine disks
+    reason: CopyingDisks
+    status: "True"
+    type: Processing
+  dataVolumes:
+  - name: fedora32-b870c429-11e0-4630-b3df-21da551a48c0
+  targetVmName: fedora32
+----

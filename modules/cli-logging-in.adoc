@@ -12,13 +12,25 @@ You can log in to the `oc` CLI to access and manage your cluster.
 * You must have access to an {product-title} cluster.
 * You must have installed the CLI.
 
+[NOTE]
+====
+To access a cluster that is accessible only over an HTTP proxy server, you can set the `HTTP_PROXY`, `HTTPS_PROXY` and `NO_PROXY` variables.
+These environment variables are respected by the `oc` CLI so that all communication with the cluster goes through the HTTP proxy.
+====
+
 .Procedure
 
 * Log in to the CLI using the `oc login` command and enter the required
 information when prompted.
 +
+[source,terminal]
 ----
 $ oc login
+----
++
+.Example output
+[source,terminal]
+----
 Server [https://localhost:8443]: https://openshift.example.com:6443 <1>
 The server uses a certificate signed by an unknown authority.
 You can bypass the certificate check, but any data you send to the server could be intercepted by others.

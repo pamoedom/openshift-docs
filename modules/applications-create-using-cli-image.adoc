@@ -12,7 +12,7 @@ images in the local Docker server.
 The `new-app` command attempts to determine the type of image specified in the
 arguments passed to it. However, you can explicitly tell `new-app` whether the
 image is a container image using the `--docker-image` argument or an imagestream
-using the `-i|--image` argument.
+using the `-i|--image-stream` argument.
 
 [NOTE]
 ====
@@ -24,6 +24,7 @@ the same image is available to the {product-title} cluster nodes.
 
 Create an application from the DockerHub MySQL image, for example:
 
+[source,terminal]
 ----
 $ oc new-app mysql
 ----
@@ -33,6 +34,7 @@ $ oc new-app mysql
 Create an application using an image in a private registry, specify the full
 container image specification:
 
+[source,terminal]
 ----
 $ oc new-app myregistry:5000/example/myimage
 ----
@@ -41,6 +43,7 @@ $ oc new-app myregistry:5000/example/myimage
 
 Create an application from an existing imagestream and optional imagestreamtag:
 
+[source,terminal]
 ----
 $ oc new-app my-stream:v1
 ----

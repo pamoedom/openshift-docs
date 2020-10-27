@@ -12,6 +12,8 @@ you grant that user all of the required permissions. To deploy all components of
 cluster, the IAM user requires the following permissions:
 
 .Required EC2 permissions for installation
+[%collapsible]
+====
 * `ec2:AllocateAddress`
 * `ec2:AssociateAddress`
 * `ec2:AuthorizeSecurityGroupEgress`
@@ -50,6 +52,7 @@ cluster, the IAM user requires the following permissions:
 * `ec2:DescribeVpcClassicLinkDnsSupport`
 * `ec2:DescribeVpcEndpoints`
 * `ec2:DescribeVpcs`
+* `ec2:GetEbsDefaultKmsKeyId`
 * `ec2:ModifyInstanceAttribute`
 * `ec2:ModifyNetworkInterfaceAttribute`
 * `ec2:ReleaseAddress`
@@ -57,8 +60,11 @@ cluster, the IAM user requires the following permissions:
 * `ec2:RevokeSecurityGroupIngress`
 * `ec2:RunInstances`
 * `ec2:TerminateInstances`
+====
 
 .Required permissions for creating network resources during installation
+[%collapsible]
+====
 * `ec2:AssociateDhcpOptions`
 * `ec2:AssociateRouteTable`
 * `ec2:AttachInternetGateway`
@@ -74,11 +80,14 @@ cluster, the IAM user requires the following permissions:
 * `ec2:ModifyVpcAttribute`
 
 [NOTE]
-====
+=====
 If you use an existing VPC, your account does not require these permissions for creating network resources.
+=====
 ====
 
 .Required Elasticloadbalancing permissions for installation
+[%collapsible]
+====
 * `elasticloadbalancing:AddTags`
 * `elasticloadbalancing:ApplySecurityGroupsToLoadBalancer`
 * `elasticloadbalancing:AttachLoadBalancerToSubnets`
@@ -103,8 +112,11 @@ If you use an existing VPC, your account does not require these permissions for 
 * `elasticloadbalancing:RegisterInstancesWithLoadBalancer`
 * `elasticloadbalancing:RegisterTargets`
 * `elasticloadbalancing:SetLoadBalancerPoliciesOfListener`
+====
 
 .Required IAM permissions for installation
+[%collapsible]
+====
 * `iam:AddRoleToInstanceProfile`
 * `iam:CreateInstanceProfile`
 * `iam:CreateRole`
@@ -123,8 +135,11 @@ If you use an existing VPC, your account does not require these permissions for 
 * `iam:RemoveRoleFromInstanceProfile`
 * `iam:SimulatePrincipalPolicy`
 * `iam:TagRole`
+====
 
 .Required Route53 permissions for installation
+[%collapsible]
+====
 * `route53:ChangeResourceRecordSets`
 * `route53:ChangeTagsForResource`
 * `route53:CreateHostedZone`
@@ -136,11 +151,15 @@ If you use an existing VPC, your account does not require these permissions for 
 * `route53:ListResourceRecordSets`
 * `route53:ListTagsForResource`
 * `route53:UpdateHostedZoneComment`
+====
 
 .Required S3 permissions for installation
+[%collapsible]
+====
 * `s3:CreateBucket`
 * `s3:DeleteBucket`
 * `s3:GetAccelerateConfiguration`
+* `s3:GetBucketAcl`
 * `s3:GetBucketCors`
 * `s3:GetBucketLocation`
 * `s3:GetBucketLogging`
@@ -157,8 +176,11 @@ If you use an existing VPC, your account does not require these permissions for 
 * `s3:PutBucketAcl`
 * `s3:PutBucketTagging`
 * `s3:PutEncryptionConfiguration`
+====
 
 .S3 permissions that cluster Operators require
+[%collapsible]
+====
 * `s3:DeleteObject`
 * `s3:GetObject`
 * `s3:GetObjectAcl`
@@ -167,20 +189,29 @@ If you use an existing VPC, your account does not require these permissions for 
 * `s3:PutObject`
 * `s3:PutObjectAcl`
 * `s3:PutObjectTagging`
+====
 
 .Required permissions to delete base cluster resources
+[%collapsible]
+====
 * `autoscaling:DescribeAutoScalingGroups`
 * `ec2:DeleteNetworkInterface`
 * `ec2:DeleteVolume`
 * `elasticloadbalancing:DeleteTargetGroup`
 * `elasticloadbalancing:DescribeTargetGroups`
+* `iam:DeleteAccessKey`
+* `iam:DeleteUser`
 * `iam:ListInstanceProfiles`
 * `iam:ListRolePolicies`
 * `iam:ListUserPolicies`
 * `s3:DeleteObject`
+* `s3:ListBucketVersions`
 * `tag:GetResources`
+====
 
 .Required permissions to delete network resources
+[%collapsible]
+====
 * `ec2:DeleteDhcpOptions`
 * `ec2:DeleteInternetGateway`
 * `ec2:DeleteNatGateway`
@@ -194,11 +225,14 @@ If you use an existing VPC, your account does not require these permissions for 
 * `ec2:ReplaceRouteTableAssociation`
 
 [NOTE]
-====
+=====
 If you use an existing VPC, your account does not require these permissions to delete network resources.
+=====
 ====
 
 .Additional IAM and S3 permissions that are required to create manifests
+[%collapsible]
+====
 * `iam:CreateAccessKey`
 * `iam:CreateUser`
 * `iam:DeleteAccessKey`
@@ -216,3 +250,4 @@ If you use an existing VPC, your account does not require these permissions to d
 * `s3:HeadBucket`
 * `s3:ListBucketMultipartUploads`
 * `s3:AbortMultipartUpload`
+====

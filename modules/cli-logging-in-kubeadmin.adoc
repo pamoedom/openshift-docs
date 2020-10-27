@@ -3,11 +3,13 @@
 // * installing/installing_aws/installing-aws-user-infra.adoc
 // * installing/installing_aws/installing-aws-customizations.adoc
 // * installing/installing_aws/installing-aws-default.adoc
+// * installing/installing_aws/installing-aws-government-region.adoc
 // * installing/installing_aws/installing-aws-network-customizations.adoc
 // * installing/installing_aws/installing-aws-private.adoc
 // * installing/installing_aws/installing-aws-vpc.adoc
 // * installing/installing_azure/installing-azure-customizations.adoc
 // * installing/installing_azure/installing-azure-default.adoc
+// * installing/installing_azure/installing-azure-government-region.adoc
 // * installing/installing_azure/installing-azure-private.adoc
 // * installing/installing_azure/installing-azure-vnet.adoc
 // * installing/installing_azure/installing-azure-user-infra.adoc
@@ -26,6 +28,8 @@
 // * installing/installing_bare_metal/installing-restricted-networks-bare-metal.adoc
 // * installing/installing_vsphere/installing-restricted-networks-vsphere.adoc
 // * installing/installing_vsphere/installing-vsphere.adoc
+// * installing/installing_vsphere/installing-vsphere-installer-provisioned.adoc
+// * installing/installing_vsphere/installing-vsphere-installer-provisioned-customizations.adoc
 // * installing/installing_ibm_z/installing-ibm-z.adoc
 // * installing/installing_rhv/installing-rhv-customizations.adoc
 // * installing/installing_rhv/installing-rhv-default.adoc
@@ -47,6 +51,7 @@ The file is specific to a cluster and is created during {product-title} installa
 
 . Export the `kubeadmin` credentials:
 +
+[source,terminal]
 ----
 $ export KUBECONFIG=<installation_directory>/auth/kubeconfig <1>
 ----
@@ -55,7 +60,13 @@ the installation files in.
 
 . Verify you can run `oc` commands successfully using the exported configuration:
 +
+[source,terminal]
 ----
 $ oc whoami
+----
++
+.Example output
+[source,terminal]
+----
 system:admin
 ----

@@ -1,6 +1,6 @@
 ////
 Module included in the following assemblies:
-- servicemesh-release-notes.adoc
+* service_mesh/v2x/servicemesh-release-notes.adoc
 ////
 
 [id="ossm-rn-fixed-issues_{context}"]
@@ -18,6 +18,52 @@ The following issues been resolved in the current release:
 
 [id="ossm-rn-fixed-issues-ossm_{context}"]
 == {ProductShortName} fixed issues
+
+* link:https://issues.redhat.com/browse/MAISTRA-1810[MAISTRA-1810] Some traces show `write flush complete` logs within the timeout period for close.
+
+* link:https://issues.redhat.com/browse/MAISTRA-1166[MAISTRA-1166] Occasional downstream connection terminations happen when requests enter a cluster via the Istio Ingress gateway.
+
+* link:https://issues.redhat.com/browse/MAISTRA-1629[MAISTRA-1629] Maistra doesn't respect `traffic.sidecar.istio.io/excludeOutboundPorts` pod annotation.
+
+* link:https://issues.redhat.com/browse/MAISTRA-1537[MAISTRA-1537] Gateway with multiple ports or protocols results in a route with a single port or protocol.
+
+* link:https://issues.redhat.com/browse/MAISTRA-1352[MAISTRA-1352] Cert-manager Custom Resource Definitions (CRD) from the control plane installation have been removed for this release and future releases. If you have already installed {ProductName}, the CRDs must be removed manually if cert-manager is not being used.
++
+To remove the CRDs, run the following commands:
++
+[source,terminal]
+----
+$ oc delete crd clusterissuers.certmanager.k8s.io
+----
++
+[source,terminal]
+----
+$ oc delete crd issuers.certmanager.k8s.io
+----
++
+[source,terminal]
+----
+$ oc delete crd certificates.certmanager.k8s.io
+----
++
+[source,terminal]
+----
+$ oc delete crd orders.certmanager.k8s.io
+----
++
+[source,terminal]
+----
+$ oc delete crd challenges.certmanager.k8s.io
+----
+
+* link:https://issues.redhat.com/projects/MAISTRA/issues/MAISTRA-1649[MAISTRA-1649] Headless services conflict when in different namespaces. When deploying headless services within different namespaces the endpoint configuration is merged and results in invalid Envoy configurations being pushed to the sidecars.
+
+* link:https://issues.redhat.com/browse/MAISTRA-1541[MAISTRA-1541] Panic in kubernetesenv when the controller is not set on owner reference. If a pod has an ownerReference which does not specify the controller, this will cause a panic within the `kubernetesenv cache.go` code.
+
+* link:https://issues.redhat.com/browse/TRACING-1300[TRACING-1300] Failed connection between Agent and Collector when using Istio sidecar. An update of the Jaeger Operator enabled TLS communication by default between a Jaeger sidecar agent and the Jaeger Collector.
+
+* link:https://issues.redhat.com/browse/TRACING-1208[TRACING-1208] Authentication "500 Internal Error" when accessing Jaeger UI. When trying to authenticate to the UI using OAuth, I get a 500 error because oauth-proxy sidecar doesn't trust the custom CA bundle defined at installation time with the additionalTrustBundle.
+
 * link:https://issues.jboss.org/browse/OSSM-99[OSSM-99] Workloads generated from direct Pod without labels may crash Kiali.
 
 * link:https://issues.jboss.org/browse/OSSM-93[OSSM-93] IstioConfigList can't filter by two or more names.
@@ -50,6 +96,10 @@ The following issues been resolved in the current release:
 
 * link:https://issues.jboss.org/browse/KIALI-3239[KIALI-3239] If a Kiali Operator pod has failed with a status of “Evicted” it blocks the Kiali operator from deploying. The workaround is to delete the Evicted pod and redeploy the Kiali operator.
 
-* link:https://issues.jboss.org/browse/KIALI-3096[KIALI-3096] Runtime metrics fail in {ProductShortName}. There is an OAuth filter between the {ProductShortname} and Prometheus, requiring a bearer token to be passed to Prometheus before access will be granted. Kiali has been updated to use this token when communicating to the Prometheus server, but the application metrics are currently failing with 403 errors.
+* link:https://issues.jboss.org/browse/KIALI-3118[KIALI-3118] After changes to the ServiceMeshMemberRoll, for example adding or removing projects, the Kiali pod restarts and then displays errors on the Graph page while the Kiali pod is restarting.
+
+* link:https://issues.jboss.org/browse/KIALI-3096[KIALI-3096] Runtime metrics fail in {ProductShortName}. There is an OAuth filter between the {ProductShortname} and Prometheus, requiring a bearer token to be passed to Prometheus before access is granted. Kiali has been updated to use this token when communicating to the Prometheus server, but the application metrics are currently failing with 403 errors.
 
 * link:https://issues.jboss.org/browse/KIALI-3070[KIALI-3070] This bug only affects custom dashboards, not the default dashboards. When you select labels in metrics settings and refresh the page, your selections are retained in the menu but your selections are not displayed on the charts.
+
+* link:https://github.com/kiali/kiali/issues/1603[KIALI-2686] When the control plane has many namespaces, it can lead to performance issues.

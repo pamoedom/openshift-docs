@@ -1,6 +1,6 @@
 // Module included in the following assemblies:
 //
-// * authentication/configuring-corsallowedorigins.adoc
+// * security/allowing-javascript-access-api-server.adoc
 
 [id="auth-allowing-javascript-access-api-server_{context}"]
 = Allowing JavaScript-based access to the API server from additional hosts
@@ -19,6 +19,7 @@ to allow.
 
 . Edit the API servers resource:
 +
+[source,terminal]
 ----
 $ oc edit apiserver.config.openshift.io cluster
 ----

@@ -5,7 +5,6 @@
 // * installing/installing_gcp/installing-gcp-user-infra.adoc
 // * installing/installing_aws/installing-restricted-networks-aws.adoc
 // * installing/installing_gcp/installing-restricted-networks-gcp.adoc
-// * installing/installing_openstack/installing-openstack-user.adoc
 
 ifeval::["{context}" == "installing-restricted-networks-aws"]
 :restricted:
@@ -24,6 +23,11 @@ ifeval::["{context}" == "installing-azure-user-infra"]
 :azure:
 endif::[]
 ifeval::["{context}" == "installing-gcp-user-infra"]
+:cp-first: Google Cloud Platform
+:cp: GCP
+:gcp:
+endif::[]
+ifeval::["{context}" == "installing-gcp-user-infra-vpc"]
 :cp-first: Google Cloud Platform
 :cp: GCP
 :gcp:
@@ -79,6 +83,11 @@ endif::[]
 ifeval::["{context}" == "installing-gcp-user-infra"]
 :!cp-first:
 :!cp:
+:!gcp:
+endif::[]
+ifeval::["{context}" == "installing-gcp-user-infra-vpc"]
+:!cp-first: Google Cloud Platform
+:!cp: GCP
 :!gcp:
 endif::[]
 ifeval::["{context}" == "installing-restricted-networks-gcp"]

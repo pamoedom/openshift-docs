@@ -1,8 +1,10 @@
 // Module included in the following assemblies:
 //
+// * networking/network_policy/default-network-policy.adoc
 // * networking/configuring-networkpolicy.adoc
+// * post_installation_configuration/network-configuration.adoc
 
-[id="networkpolicy-adding-network-policy-objects-to-the-new-project-template_{context}"]
+[id="nw-networkpolicy-project-defaults_{context}"]
 = Adding network policy objects to the new project template
 
 As a cluster administrator, you can add network policy objects to the default template for new projects.
@@ -10,9 +12,8 @@ As a cluster administrator, you can add network policy objects to the default te
 
 .Prerequisites
 
-* A cluster using the OpenShift SDN network plug-in with `mode: NetworkPolicy`
-set. This mode is the default for OpenShift SDN.
-* Install the OpenShift Command-line Interface (CLI), commonly known as `oc`.
+* Your cluster is using a default CNI network provider that supports NetworkPolicy objects, such as the OpenShift SDN network provider with `mode: NetworkPolicy` set. This mode is the default for OpenShift SDN.
+* You installed the OpenShift CLI (`oc`).
 * You must log in to the cluster with a user with `cluster-admin` privileges.
 * You must have created a custom default project template for new projects.
 
@@ -20,6 +21,7 @@ set. This mode is the default for OpenShift SDN.
 
 . Edit the default template for a new project by running the following command:
 +
+[source,terminal]
 ----
 $ oc edit template <project_template> -n openshift-config
 ----
@@ -65,6 +67,7 @@ objects:
 
 .. Create a new project:
 +
+[source,terminal]
 ----
 $ oc new-project <project> <1>
 ----
@@ -72,6 +75,7 @@ $ oc new-project <project> <1>
 
 .. Confirm that the network policy objects in the new project template exist in the new project:
 +
+[source,terminal]
 ----
 $ oc get networkpolicy
 NAME                           POD-SELECTOR   AGE

@@ -4,7 +4,7 @@
 include::modules/common-attributes.adoc[]
 
 [.lead]
-Welcome to the {product-title} {product-version} documentation, where you can
+Welcome to the official {product-title} {product-version} documentation, where you can
 find information to help you learn about {product-title} and start
 exploring its features.
 
@@ -14,19 +14,21 @@ To navigate the {product-title} {product-version} documentation, you can either
 * Select the activity that interests you from the contents of this Welcome page
 
 ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
-You can start with an **xref:../architecture/architecture.adoc#architecture-overview-architecture[Introduction to {product-title}]**
+You can start with xref:../architecture/architecture.adoc#architecture-overview-architecture[Architecture] and
+xref:../security/container_security/security-understanding.adoc#understanding-security[Security and compliance].
 ifdef::openshift-enterprise,openshift-webscale[]
-and the xref:../release_notes/ocp-4-5-release-notes.adoc#ocp-4-5-release-notes[{product-title} {product-version} release notes].
+Then, see
+xref:../release_notes/ocp-4-6-release-notes.adoc#ocp-4-6-release-notes[Release notes].
 endif::[]
 endif::[]
 
 ifdef::openshift-dedicated,openshift-online,openshift-aro[]
-You can start with an **xref:../architecture/architecture.adoc#architecture-overview-architecture[Introduction to {product-title}]**.
+You can start with **xref:../architecture/architecture.adoc#architecture-overview-architecture[Architecture]**.
 endif::[]
 
 ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 == Cluster installer activities
-As someone setting out to install an {product-title} {product-version} cluster, this documentation will help you:
+As someone setting out to install an {product-title} {product-version} cluster, this documentation helps you:
 
 - **xref:../installing/installing_aws/installing-aws-account.adoc#installing-aws-account[Install a cluster on AWS]**: You have the most installation options when you deploy a cluster on Amazon Web Services (AWS). You can deploy clusters with xref:../installing/installing_aws/installing-aws-default.adoc#installing-aws-default[default settings] or xref:../installing/installing_aws/installing-aws-customizations.adoc#installing-aws-customizations[custom AWS settings].
 You can also deploy a cluster on AWS infrastructure that you provisioned yourself. You can modify the provided xref:../installing/installing_aws/installing-aws-user-infra.adoc#installing-aws-user-infra[AWS CloudFormation templates] to meet your needs.
@@ -43,8 +45,12 @@ or using xref:../installing/installing_azure/installing-azure-user-infra.adoc#in
 
 - **xref:../installing/installing_bare_metal/installing-bare-metal.adoc#installing-bare-metal[Install a cluster on bare metal]**: If none of the available platform and cloud providers meet your needs, you can install {product-title} on bare metal.
 
-- **Install a cluster on OpenStack Platform**: You can install a cluster on
-xref:../installing/installing_openstack/installing-openstack-installer-custom.adoc#installing-openstack-installer-custom[OpenStack with customizations].
+- **xref:../installing/installing_bare_metal_ipi/ipi-install-overview.adoc#ipi-install-overview[Install an installer-provisioned cluster on bare metal]**: You can install {product-title} on bare metal with an installer-provisioned architecture.
+
+- **xref:../installing/installing_bare_metal/installing-bare-metal.adoc#creating-machines-bare-metal[Create {op-system-first} machines on bare metal]**: You can install {op-system} machines using ISO or PXE in a fully live environment and configure them with kernel arguments, Ignition configs, or the `coreos-installer` command.
+
+- **Install a cluster on {rh-openstack-first}**: You can install a cluster on
+xref:../installing/installing_openstack/installing-openstack-installer-custom.adoc#installing-openstack-installer-custom[{rh-openstack} with customizations].
 
 ////
 You can configure an external load balancer for
@@ -54,8 +60,7 @@ xref:../installing/installing_openstack/installing-openstack-troubleshooting.ado
 ////
 
 - **Install a cluster on Red Hat Virtualization**: You can deploy clusters on Red Hat Virtualization with a
-xref:../installing/installing_rhv/installing-rhv-default.adoc#installing-rhv-default[quick install], a
-xref:../installing/installing_rhv/installing-rhv-creating-custom-vm.adoc#installing-rhv-creating-custom-vm[custom virtual machine template] install, or an
+xref:../installing/installing_rhv/installing-rhv-default.adoc#installing-rhv-default[quick install] or an
 xref:../installing/installing_rhv/installing-rhv-customizations.adoc#installing-rhv-customizations[install with customizations].
 
 - **Install a cluster in a restricted network**: If your cluster that uses
@@ -86,11 +91,11 @@ Internet access is still required to access the cloud APIs and installation medi
 
 - **xref:../web_console/web-console.adoc#web-console[Access {product-title}]**: Use credentials output at the end of the installation process to log in to the {product-title} cluster from the command line or web console.
 
-- **xref:../storage/persistent_storage/persistent-storage-ocs.adoc#red-hat-openshift-container-storage[Install Red Hat OpenShift Container Storage]**
+- **xref:../storage/persistent_storage/persistent-storage-ocs.adoc#red-hat-openshift-container-storage[Install Red Hat OpenShift Container Storage]**: You can install Red Hat OpenShift Container Storage as an Operator to provide highly integrated and simplified persistent storage management for containers.
 endif::[]
 
 == Developer activities
-Ultimately, {product-title} is a platform for developing and deploying containerized applications. As an application developer, {product-title} documentation will help you:
+Ultimately, {product-title} is a platform for developing and deploying containerized applications. As an application developer, {product-title} documentation helps you:
 
 - **xref:../architecture/understanding-development.adoc#understanding-development[Understand {product-title} development]**: Learn the different types of
 containerized applications, from simple containers to advanced Kubernetes deployments and Operators.
@@ -98,7 +103,7 @@ containerized applications, from simple containers to advanced Kubernetes deploy
 - **xref:../applications/projects/working-with-projects.adoc#working-with-projects[Work with projects]**: Create projects from the web console or CLI to organize and share the software you develop.
 
 - **xref:../applications/application_life_cycle_management/odc-creating-applications-using-developer-perspective.adoc#odc-creating-applications-using-developer-perspective[Work with applications]**:
-Use the xref:../web_console/odc-about-developer-perspective.adoc#odc-about-developer-perspective[Developer perspective] in the  {product-title} web console to easily
+Use the xref:../web_console/odc-about-developer-perspective.adoc#odc-about-developer-perspective[Developer perspective] in the {product-title} web console to easily
 xref:../applications/application_life_cycle_management/odc-creating-applications-using-developer-perspective.adoc#odc-creating-applications-using-developer-perspective[create and deploy applications].
 Use the
 xref:../applications/application_life_cycle_management/odc-viewing-application-composition-using-topology-view.adoc#odc-viewing-application-composition-using-topology-view[Topology view]
@@ -122,7 +127,7 @@ application packages on Kubernetes. A Helm Chart is a packaging format that
 describes an application that can be deployed using the Helm CLI.
 endif::[]
 
-- **xref:../operators/olm-what-operators-are.adoc#olm-what-operators-are[Understand Operators]**: Operators are the preferred method for creating on-cluster applications for {product-title} {product-version}. Learn about the Operator Framework and how to deploy applications using installed Operators into your projects.
+- **xref:../operators/understanding/olm-what-operators-are.adoc#olm-what-operators-are[Understand Operators]**: Operators are the preferred method for creating on-cluster applications for {product-title} {product-version}. Learn about the Operator Framework and how to deploy applications using installed Operators into your projects.
 
 - **xref:../builds/understanding-image-builds.adoc#understanding-image-builds[Understand image builds]**: Choose from different build strategies (Docker, S2I, custom, and pipeline) that can include different kinds of source materials (from places like Git repositories, local binary inputs, and external artifacts). Then, follow examples of build types from basic builds to advanced builds.
 
@@ -137,7 +142,7 @@ ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 - **xref:../operators/operator_sdk/osdk-getting-started.adoc#osdk-getting-started[Create Operators]**: Operators are the preferred method for creating on-cluster applications for {product-title} {product-version}. Learn the workflow for building, testing, and deploying Operators. Then create your own Operators based on xref:../operators/operator_sdk/osdk-ansible.adoc#osdk-ansible[Ansible] or
 xref:../operators/operator_sdk/osdk-helm.adoc#osdk-helm[Helm], or configure xref:../operators/operator_sdk/osdk-monitoring-prometheus.adoc#osdk-monitoring-prometheus[built-in Prometheus monitoring] using the Operator SDK.
 
-- **xref:../rest_api/index.adoc#rest-api[REST API Guide]**: Lists {product-title} application programming interface endpoints.
+- **xref:../rest_api/index.adoc#api-index[REST API reference]**: Lists {product-title} application programming interface endpoints.
 endif::[]
 
 ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
@@ -147,10 +152,10 @@ Ongoing tasks on your {product-title} {product-version} cluster
 include various activities for managing machines, providing
 services to users, and following monitoring and logging features
 that watch over the cluster. As a cluster administrator, this
-documentation will help you:
+documentation helps you:
 
 - **xref:../architecture/architecture.adoc#architecture-overview-architecture[Understand {product-title} management]**: Learn about components
-of the {product-title} {product-version} control plane. See how {product-title} masters and workers are managed and updated through the xref:../machine_management/creating_machinesets/creating-machineset-aws.adoc#machine-api-overview_creating-machineset-aws[Machine API] and xref:../operators/olm-what-operators-are.adoc#machine-api-overview-architecture[Operators].
+of the {product-title} {product-version} control plane. See how {product-title} masters and workers are managed and updated through the xref:../machine_management/creating_machinesets/creating-machineset-aws.adoc#machine-api-overview_creating-machineset-aws[Machine API] and xref:../architecture/control-plane.adoc#operators-overview_control-plane[Operators].
 
 === Manage cluster components
 
@@ -179,10 +184,10 @@ xref:../authentication/identity_providers/configuring-google-identity-provider.a
 and
 xref:../authentication/identity_providers/configuring-oidc-identity-provider.adoc#configuring-oidc-identity-provider[OpenID].
 
-- **Manage xref:../authentication/certificates/replacing-default-ingress-certificate.adoc#replacing-default-ingress[Ingress], xref:../authentication/certificates/api-server.adoc#api-server-certificates[API server], and xref:../authentication/certificates/service-serving-certificate.adoc#add-service-serving[service] certificates**: {product-title} creates certificates
+- **Manage xref:../security/certificates/replacing-default-ingress-certificate.adoc#replacing-default-ingress[Ingress], xref:../security/certificates/api-server.adoc#api-server-certificates[API server], and xref:../security/certificates/service-serving-certificate.adoc#add-service-serving[service] certificates**: {product-title} creates certificates
 by default for the Ingress Operator, the API server, and for
 services needed by complex middleware applications that require
-encryption. At some point, you may need to change, add, and
+encryption. At some point, you might need to change, add, or
 rotate these certificates.
 
 - **xref:../networking/understanding-networking.adoc#understanding-networking[Manage networking]**: Networking in {product-title} is managed by
@@ -191,7 +196,7 @@ The CNO uses iptables rules in xref:../networking/openshift_sdn/configuring-kube
 direct traffic between nodes and pods running on those nodes.
 The Multus Container Network Interface
 adds the capability to attach xref:../networking/multiple_networks/understanding-multiple-networks.adoc#understanding-multiple-networks[multiple network interfaces] to a Pod. Using
-xref:../networking/configuring-networkpolicy.adoc#configuring-networkpolicy-plugin[NetworkPolicy] features, you can isolate your networks or permit selected traffic.
+xref:../networking/network_policy/about-network-policy.adoc#about-network-policy[network policy] features, you can isolate your Pods or permit selected traffic.
 
 - **xref:../storage/understanding-persistent-storage.adoc#understanding-persistent-storage[Manage storage]**: {product-title} allows cluster administrators to
 configure persistent storage using
@@ -202,15 +207,18 @@ xref:../storage/persistent_storage/persistent-storage-iscsi.adoc#persistent-stor
 xref:../storage/container_storage_interface/persistent-storage-csi.adoc#persistent-storage-using-csi[Container Storage Interface (CSI)],
 and more.
 As needed, you can
-xref:../storage/expanding-persistent-volumes.adoc#expanding-persistent-volumes[expand persistent volumes]
-and configure xref:../storage/dynamic-provisioning.adoc#dynamic-provisioning[dynamic provisioning].
+xref:../storage/expanding-persistent-volumes.adoc#expanding-persistent-volumes[expand persistent volumes],
+configure xref:../storage/dynamic-provisioning.adoc#dynamic-provisioning[dynamic provisioning], and use CSI to
+xref:../storage/container_storage_interface/persistent-storage-csi.adoc#persistent-storage-using-csi[configure] and
+xref:../storage/container_storage_interface/persistent-storage-csi-cloning.adoc#persistent-storage-csi-cloning[clone]
+persistent storage.
 
-- **xref:../operators/olm-what-operators-are.adoc#olm-what-operators-are[Manage Operators]**: Lists of Red Hat, ISV, and community Operators can
-be reviewed by cluster administrators and xref:../operators/olm-adding-operators-to-cluster.adoc#olm-adding-operators-to-a-cluster[installed on their clusters]. Once installed, you can xref:../operators/olm-creating-apps-from-installed-operators.adoc#olm-creating-apps-from-installed-operators[run], upgrade, back up or otherwise manage the Operator on your cluster (based on what the Operator is designed to do).
+- **xref:../operators/understanding/olm-understanding-operatorhub.adoc#olm-understanding-operatorhub[Manage Operators]**: Lists of Red Hat, ISV, and community Operators can
+be reviewed by cluster administrators and xref:../operators/admin/olm-adding-operators-to-cluster.adoc#olm-adding-operators-to-a-cluster[installed on their clusters]. Once installed, you can xref:../operators/user/olm-creating-apps-from-installed-operators.adoc#olm-creating-apps-from-installed-operators[run], xref:../operators/admin/olm-upgrading-operators.adoc#olm-upgrading-operators[upgrade], back up or otherwise manage the Operator on your cluster (based on what the Operator is designed to do).
 
 === Change cluster components
 
-- **xref:../operators/crds/crd-extending-api-with-crds.adoc#crd-extending-api-with-crds[Use Custom Resource Definition (CRDs) to modify the cluster]**: Cluster features that are implemented with Operators, can be modified with CRDs. Learn to xref:../operators/crds/crd-extending-api-with-crds.adoc#crd-creating-custom-resources-definition_crd-extending-api-with-crds[create a CRD] and xref:../operators/crds/crd-managing-resources-from-crds.adoc#crd-managing-resources-from-crds[manage resources from CRDs].
+- **xref:../operators/understanding/crds/crd-extending-api-with-crds.adoc#crd-extending-api-with-crds[Use Custom Resource Definition (CRDs) to modify the cluster]**: Cluster features that are implemented with Operators, can be modified with CRDs. Learn to xref:../operators/understanding/crds/crd-extending-api-with-crds.adoc#crd-creating-custom-resources-definition_crd-extending-api-with-crds[create a CRD] and xref:../operators/understanding/crds/crd-managing-resources-from-crds.adoc#crd-managing-resources-from-crds[manage resources from CRDs].
 
 ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 - **xref:../applications/quotas/quotas-setting-per-project.adoc#quotas-setting-per-project[Set resource quotas]**: Choose from CPU, memory and other system resources to xref:../applications/quotas/quotas-setting-per-project.adoc#quotas-setting-per-project[set quotas].
@@ -233,9 +241,9 @@ xref:../updating/updating-disconnected-cluster.adoc#updating-disconnected-cluste
 
 - **xref:../logging/cluster-logging.adoc#cluster-logging[Work with cluster logging]**: Learn about cluster logging and configure different cluster logging types, such as Elasticsearch, Fluentd, Kibana, and Curator.
 
-- **xref:../monitoring/cluster_monitoring/about-cluster-monitoring.adoc#about-cluster-monitoring[Monitor clusters]**:
-Learn to  xref:../monitoring/cluster_monitoring/configuring-the-monitoring-stack.adoc#configuring-the-monitoring-stack[configure the monitoring].
-Once your monitoring is configured, use the Web UI to access xref:../monitoring/cluster_monitoring/prometheus-alertmanager-and-grafana.adoc#prometheus-alertmanager-and-grafana[Prometheus, Alertmanager, and Grafana].
+- **xref:../monitoring/understanding-the-monitoring-stack.adoc#understanding-the-monitoring-stack[Monitor clusters]**:
+Learn to  xref:../monitoring/configuring-the-monitoring-stack.adoc#configuring-the-monitoring-stack[configure the monitoring stack].
+Once your monitoring is configured, use the Web UI to access xref:../monitoring/reviewing-monitoring-dashboards.adoc#reviewing-monitoring-dashboards[monitoring dashboards].
 In addition to infrastructure metrics, you can also scrape and view metrics for your own services.
 
 - **xref:../support/remote_health_monitoring/about-remote-health-monitoring.adoc#about-remote-health-monitoring_about-remote-health-monitoring[Remote health monitoring]**: {product-title} collects anonymized aggregated information about your cluster and reports it to Red Hat via Telemetry and the Insights Operator. This information allows Red Hat to improve {product-title} and to react to issues that impact customers more quickly. You can view the xref:../support/remote_health_monitoring/showing-data-collected-by-remote-health-monitoring.adoc#showing-data-collected-by-remote-health-monitoring_showing-data-collected-by-remote-health-monitoring[data collected by remote health monitoring].
@@ -247,13 +255,13 @@ ifdef::openshift-dedicated[]
 While cluster maintenance and host configuration is performed by the {product-title}
 Operations Team, other ongoing tasks on your {product-title} {product-version}
 cluster can be performed by {product-title} cluster administrators. As a
-{product-title} cluster administrator, this documentation will help you:
+{product-title} cluster administrator, this documentation helps you:
 
 - **xref:../administering_a_cluster/dedicated-admin-role.adoc#dedicated-administrator-role[Understand the `dedicated-admin` role]**: Learn about the elevated privileges provided to {product-title} cluster administrators.
 
 ////
-- **xref:../operators/olm-what-operators-are.adoc#olm-what-operators-are[Manage Operators]**: Lists of Red Hat, ISV, and community Operators can
-be reviewed by cluster administrators and xref:../operators/olm-adding-operators-to-cluster.adoc#olm-adding-operators-to-a-cluster[installed on their clusters]. Once installed, you can xref:../operators/olm-creating-apps-from-installed-operators.adoc#olm-creating-apps-from-installed-operators[run], upgrade, back up or otherwise manage the Operator on your cluster (based on what the Operator is designed to do).
+- **xref:../operators/understanding/olm-what-operators-are.adoc#olm-what-operators-are[Manage Operators]**: Lists of Red Hat, ISV, and community Operators can
+be reviewed by cluster administrators and xref:../operators/admin/olm-adding-operators-to-cluster.adoc#olm-adding-operators-to-a-cluster[installed on their clusters]. Once installed, you can xref:../operators/user/olm-creating-apps-from-installed-operators.adoc#olm-creating-apps-from-installed-operators[run], upgrade, back up or otherwise manage the Operator on your cluster (based on what the Operator is designed to do).
 ////
 
 - **xref:../administering_a_cluster/dedicated-admin-role.adoc#dedicated-managing-administrators_dedicated-administrator[Manage RBAC authorizations]**: Grant permissions to users or groups and manage service accounts.
@@ -265,7 +273,7 @@ ifdef::openshift-enterprise,openshift-webscale,openshift-origin[]
 endif::[]
 
 ////
-- **xref:../operators/crds/crd-managing-resources-from-crds.adoc#crd-managing-resources-from-crds[Manage resources from Custom Resource Definition (CRDs)]**: Learn about how {product-title} cluster administrators and project administrators can use CRDs to manage custom resources in non-default namespaces.
+- **xref:../operators/understanding/crds/crd-managing-resources-from-crds.adoc#crd-managing-resources-from-crds[Manage resources from Custom Resource Definition (CRDs)]**: Learn about how {product-title} cluster administrators and project administrators can use CRDs to manage custom resources in non-default namespaces.
 ////
 
 
@@ -277,9 +285,9 @@ Learn about how to deploy and use a cluster to aggregate logs for a range of {pr
 services. Cluster logging collects, stores, and visualizes logging data from hosts and
 applications, whether coming from multiple containers or even deleted pods.
 
-- **xref:../monitoring/cluster_monitoring/about-cluster-monitoring.adoc#about-cluster-monitoring[Monitor clusters]**: Learn to
-xref:../monitoring/cluster_monitoring/configuring-the-monitoring-stack.adoc#configuring-the-monitoring-stack[configure the monitoring stack].
-Once your monitoring is configured, use the Web UI to xref:../monitoring/cluster_monitoring/prometheus-alertmanager-and-grafana.adoc#prometheus-alertmanager-and-grafana[access Prometheus, Alertmanager, and Grafana].
+- **xref:../monitoring/understanding-the-monitoring-stack.adoc#understanding-the-monitoring-stack[Monitor clusters]**: Learn to
+xref:../monitoring/configuring-the-monitoring-stack.adoc#configuring-the-monitoring-stack[configure the monitoring stack].
+Once your monitoring is configured, use the Web UI to xref:../monitoring/reviewing-monitoring-dashboards.adoc#reviewing-monitoring-dashboards[monitoring dashboards].
 In addition to infrastructure metrics, you can also scrape and view metrics for your own services.
 
 - **xref:../support/remote_health_monitoring/about-remote-health-monitoring.adoc#about-remote-health-monitoring_about-remote-health-monitoring[Remote health monitoring]**: {product-title} collects anonymized aggregated information about your cluster and reports it to Red Hat via Telemetry and the Insights Operator. This information allows Red Hat to improve {product-title} and to react to issues that impact customers more quickly. You can view the xref:../support/remote_health_monitoring/showing-data-collected-by-remote-health-monitoring.adoc#showing-data-collected-by-remote-health-monitoring_showing-data-collected-by-remote-health-monitoring[data collected by remote health monitoring].

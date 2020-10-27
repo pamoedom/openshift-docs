@@ -5,12 +5,14 @@
 // * installing/installing_bare_metal/installing-bare-metal-network-customizations.adoc
 // * installing/installing_vsphere/installing-vsphere-network-customizations.adoc
 // * installing/installing_gcp/installing-gcp-network-customizations.adoc
+// * installing/installing_vsphere/installing-vsphere-installer-provisioned-network-customizations.adoc
 
 ifeval::["{context}" == "installing-bare-metal-network-customizations"]
 :ignition-config:
 endif::[]
 ifeval::["{context}" == "installing-vsphere-network-customizations"]
 :ignition-config:
+:vsphere:
 endif::[]
 
 [id="modifying-nwoperator-config-startup_{context}"]
@@ -40,6 +42,7 @@ endif::ignition-config[]
 
 . Use the following command to create manifests:
 +
+[source,terminal]
 ----
 $ ./openshift-install create manifests --dir=<installation_directory> <1>
 ----
@@ -49,6 +52,7 @@ contains the `install-config.yaml` file for your cluster.
 . Create a file that is named `cluster-network-03-config.yml` in the
 `<installation_directory>/manifests/` directory:
 +
+[source,terminal]
 ----
 $ touch <installation_directory>/manifests/cluster-network-03-config.yml <1>
 ----
@@ -58,8 +62,14 @@ $ touch <installation_directory>/manifests/cluster-network-03-config.yml <1>
 After creating the file, several network configuration files are in the
 `manifests/` directory, as shown:
 +
+[source,terminal]
 ----
 $ ls <installation_directory>/manifests/cluster-network-*
+----
++
+.Example output
+[source,terminal]
+----
 cluster-network-01-crd.yml
 cluster-network-02-config.yml
 cluster-network-03-config.yml
@@ -75,10 +85,10 @@ kind: Network
 metadata:
   name: cluster
 spec: <1>
-  clusterNetwork: 
+  clusterNetwork:
   - cidr: 10.128.0.0/14
     hostPrefix: 23
-  serviceNetwork: 
+  serviceNetwork:
   - 172.30.0.0/16
   defaultNetwork:
     type: OpenShiftSDN
@@ -98,9 +108,24 @@ specify only the parameters that you want to change.
 installation program deletes the `manifests/` directory when creating the
 cluster.
 
+ifdef::vsphere[]
+. Remove the Kubernetes manifest files that define the control plane machines and compute machineSets:
++
+[source,terminal]
+----
+$ rm -f openshift/99_openshift-cluster-api_master-machines-*.yaml openshift/99_openshift-cluster-api_worker-machineset-*.yaml
+----
++
+Because you create and manage these resources yourself, you do not have
+to initialize them.
++
+* You can preserve the MachineSet files to create compute machines by using the machine API, but you must update references to them to match your environment.
+endif::vsphere[]
+
 ifeval::["{context}" == "installing-bare-metal-network-customizations"]
 :!ignition-config:
 endif::[]
 ifeval::["{context}" == "installing-vsphere-network-customizations"]
 :!ignition-config:
+:!vsphere:
 endif::[]

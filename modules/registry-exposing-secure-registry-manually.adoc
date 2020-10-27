@@ -1,6 +1,7 @@
 // Module included in the following assemblies:
 //
 // * registry/securing-exposing-registry.adoc
+// * virt/virtual_machines/importing_vms/virt-importing-vmware-vm.adoc
 
 [id="registry-exposing-secure-registry-manually_{context}"]
 = Exposing a secure registry manually
@@ -25,14 +26,20 @@ To expose the registry using `DefaultRoute`:
 
 . Set `DefaultRoute` to `True`:
 +
+[source,terminal]
 ----
 $ oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type=merge
 ----
 +
 . Log in with Podman:
 +
+[source,terminal]
 ----
 $ HOST=$(oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}')
+----
++
+[source,terminal]
+----
 $ podman login -u $(oc whoami) -p $(oc whoami -t) --tls-verify=false $HOST <1>
 ----
 <1> `--tls-verify=false` is needed if the cluster's default certificate for routes
@@ -44,9 +51,10 @@ To expose the registry using custom routes:
 
 . Create a secret with your route's TLS keys:
 +
+[source,terminal]
 ----
 $ oc create secret tls public-route-tls \
-    -n image-registry \
+    -n openshift-image-registry \
     --cert=</path/to/tls.crt> \
     --key=</path/to/tls.key>
 ----
@@ -56,6 +64,7 @@ default TLS configuration from the Ingress Operator.
 +
 . On the Registry Operator:
 +
+[source,yaml]
 ----
 spec:
   routes:

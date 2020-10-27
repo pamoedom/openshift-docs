@@ -29,13 +29,13 @@ To install the Cluster Resource Override Operator using the {product-title} web 
 
 .. Choose  *ClusterResourceOverride Operator* from the list of available Operators and click *Install*.
 
-.. On the *Create Operator Subscription* page, make sure *A specific Namespace on the cluster* is selected for *Installation Mode*. 
+.. On the *Install Operator* page, make sure *A specific Namespace on the cluster* is selected for *Installation Mode*. 
 
 .. Make sure *clusterresourceoverride-operator* is selected for *Installed Namespace*.
 
 .. Select an *Update Channel* and *Approval Strategy*.
 
-.. Click *Subscribe*.
+.. Click *Install*.
 
 . On the *Installed Operators* page, click *ClusterResourceOverride*.
 

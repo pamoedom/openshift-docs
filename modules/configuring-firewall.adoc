@@ -7,9 +7,11 @@
 
 Before you install {product-title}, you must configure your firewall to grant access to the sites that {product-title} requires.
 
+There are no special configuration considerations for services running on only controller nodes versus worker nodes.
+
 .Procedure
 
-. Whitelist the following registry URLs:
+. Allowlist the following registry URLs:
 +
 [cols="3,4",options="header"]
 |===
@@ -17,14 +19,17 @@ Before you install {product-title}, you must configure your firewall to grant ac
 |`registry.redhat.io`
 |Provides core container images
 
-|`*.quay.io`
+|`quay.io`
 |Provides core container images
 
 |`sso.redhat.com`
 |The `https://cloud.redhat.com/openshift` site uses authentication from `sso.redhat.com`
+
+|`openshift.org`
+|Provides {op-system-first} images
 |===
 
-. Whitelist any site that provides resources for a language or framework that your builds require.
+. Allowlist any site that provides resources for a language or framework that your builds require.
 
 . If you do not disable Telemetry, you must grant access to the following URLs to access Red Hat Insights:
 +
@@ -68,30 +73,43 @@ Before you install {product-title}, you must configure your firewall to grant ac
 
 |===
 
-. Whitelist the following URLs:
+. Allowlist the following URLs:
 +
 [cols="3,4",options="header"]
 |===
 |URL | Function
 
 |`mirror.openshift.com`
-|Required to access mirrored installation content and images
+|Required to access mirrored installation content and images. This site is also a source of release image signatures, although the Cluster Version Operator needs only a single functioning source.
+
+|`storage.googleapis.com/openshift-release`
+|A source of release image signatures, although the Cluster Version Operator needs only a single functioning source.
 
 |`*.apps.<cluster_name>.<base_domain>`
-|Required to access the default cluster routes unless you set an ingress wildcard during installation
+|Required to access the default cluster routes unless you set an ingress wildcard during installation.
 
 |`quay-registry.s3.amazonaws.com`
-|Required to access Quay image content in AWS
+|Required to access Quay image content in AWS.
 
 |`api.openshift.com`
-|Required to check if updates are available for the cluster
+|Required to check if updates are available for the cluster.
 
 |`art-rhcos-ci.s3.amazonaws.com`
-|Required to download {op-system-first} images
+|Required to download {op-system-first} images.
 
 |`api.openshift.com`
-|Required for your cluster token
+|Required for your cluster token.
 
 |`cloud.redhat.com/openshift`
-|Required for your cluster token
+|Required for your cluster token.
 |===
++
+Operators require route access to perform health checks. Specifically, the
+authentication and web console Operators connect to two routes to verify that
+the routes work. If you are the cluster administrator and do not want to allow
+`*.apps.<cluster_name>.<base_domain>`, then allow these routes:
++
+* `oauth-openshift.apps.<cluster_name>.<base_domain>`
+* `console-openshift-console.apps.<cluster_name>.<base_domain>`, or the host name
+that is specified in the `spec.route.hostname` field of the
+`consoles.operator/cluster` object if the field is not empty.

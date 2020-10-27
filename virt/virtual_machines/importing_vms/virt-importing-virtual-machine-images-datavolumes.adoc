@@ -8,7 +8,7 @@ You can import an existing virtual machine image into your {product-title}
 cluster. {VirtProductName} uses DataVolumes to automate the import of data and the
 creation of an underlying PersistentVolumeClaim (PVC).
 
-[CAUTION]
+[IMPORTANT]
 ====
 When you import a disk image into a PVC, the disk image is
 expanded to use the full storage capacity that is requested in the PVC. To use
@@ -19,7 +19,7 @@ The resizing procedure varies based on the operating system installed on the VM.
 Refer to the operating system documentation for details.
 ====
 
-.Prerequisites
+== Prerequisites
 
 * If the endpoint requires a TLS certificate, the certificate must be
 xref:../../../virt/virtual_machines/importing_vms/virt-tls-certificates-for-dv-imports.adoc#virt-adding-tls-certificates-for-authenticating-dv-imports_virt-tls-certificates-for-dv-imports[included in a ConfigMap]

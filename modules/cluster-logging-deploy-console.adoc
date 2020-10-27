@@ -12,10 +12,7 @@ You can use the {product-title} web console to install the Elasticsearch and Clu
 * Ensure that you have the necessary persistent storage for Elasticsearch. Note that each Elasticsearch node
 requires its own storage volume.
 +
-Elasticsearch is a memory-intensive application. Each Elasticsearch node needs 16G of memory for both memory requests and limits.
-The initial set of {product-title} nodes might not be large enough to support the Elasticsearch cluster. You must add additional nodes to the
-{product-title} cluster to run with the recommended or higher memory. Each Elasticsearch node can operate with a lower
-memory setting though this is not recommended for production deployments.
+Elasticsearch is a memory-intensive application. By default, {product-title} installs three Elasticsearch nodes with memory requests and limits of 16 GB. This initial set of three {product-title} nodes might not have enough memory to run Elasticsearch within your cluster. If you experience memory issues that are related to Elasticsearch, add more Elasticsearch nodes to your cluster rather than increasing the memory on existing nodes.
 
 .Procedure
 
@@ -31,23 +28,26 @@ To install the Elasticsearch Operator and Cluster Logging Operator using the {pr
 
 .. Ensure that *openshift-operators-redhat* is selected under *Installed Namespace*.
 +
-You must specify the `openshift-operators-redhat` Namespace. To prevent
-possible conflicts with metrics, you should configure the Prometheus Cluster
-Monitoring stack to scrape metrics from the `openshift-operators-redhat`
-Namespace and not the `openshift-operators` Namespace. The `openshift-operators`
-Namespace might contain Community Operators, which are untrusted and could publish
+You must specify the `openshift-operators-redhat` namespace. The `openshift-operators`
+namespace might contain Community Operators, which are untrusted and could publish
 a metric with the same name as an {product-title} metric, which would cause
 conflicts.
 
 .. Select *Enable operator recommended cluster monitoring on this namespace*.
 +
-This option sets the `openshift.io/cluster-monitoring: "true"` label in the Namespace object. 
+This option sets the `openshift.io/cluster-monitoring: "true"` label in the Namespace object.
 You must select this option to ensure that cluster monitoring
-scrapes the `openshift-operators-redhat` Namespace.
+scrapes the `openshift-operators-redhat` namespace.
 
-.. Select an *Update Channel* and *Approval Strategy*.
+.. Select *4.6* as the *Update Channel*.
 
-.. Click *Subscribe*.
+.. Select an *Approval Strategy*.
++
+* The *Automatic* strategy allows Operator Lifecycle Manager (OLM) to automatically update the Operator when a new version is available.
++
+* The *Manual* strategy requires a user with appropriate credentials to approve the Operator update.
+
+.. Click *Install*.
 
 .. Verify that the Elasticsearch Operator installed by switching to the *Operators* → *Installed Operators* page.
 
@@ -67,13 +67,19 @@ scrapes the `openshift-operators-redhat` Namespace.
 +
 This option sets the `openshift.io/cluster-monitoring: "true"` label in the Namespace object. 
 You must select this option to ensure that cluster monitoring
-scrapes the `openshift-operators-redhat` Namespace.
+scrapes the `openshift-logging` namespace.
 
-.. Select an *Update Channel* and *Approval Strategy*.
+.. Select *4.6* as the *Update Channel*.
 
-.. Click *Subscribe*.
+.. Select an *Approval Strategy*.
++
+* The *Automatic* strategy allows Operator Lifecycle Manager (OLM) to automatically update the Operator when a new version is available.
++
+* The *Manual* strategy requires a user with appropriate credentials to approve the Operator update.
 
-.. Verify that the Cluster Logging Operator installed by switch to the *Operators* → *Installed Operators* page.
+.. Click *Install*.
+
+.. Verify that the Cluster Logging Operator installed by switching to the *Operators* → *Installed Operators* page.
 
 .. Ensure that *Cluster Logging* is listed in the *openshift-logging* project with a *Status* of *Succeeded*.
 +
@@ -116,10 +122,17 @@ spec:
   managementState: "Managed"
   logStore:
     type: "elasticsearch"
+    retentionPolicy:
+      application:
+        maxAge: 1d
+      infra:
+        maxAge: 7d
+      audit:
+        maxAge: 7d
     elasticsearch:
       nodeCount: 3
       storage:
-        storageClassName: "gp2"
+        storageClassName: gp2
         size: "200Gi"
       redundancyPolicy: "SingleRedundancy"
       nodeSelector:
@@ -160,35 +173,42 @@ spec:
   managementState: "Managed"  <2>
   logStore:
     type: "elasticsearch"  <3>
+    retentionPolicy: <4>
+      application:
+        maxAge: 1d
+      infra:
+        maxAge: 7d
+      audit:
+        maxAge: 7d
     elasticsearch:
-      nodeCount: 3 <4>
+      nodeCount: 3 <5>
       storage:
-        storageClassName: gp2 <5>
+        storageClassName: "<storage-class-name>" <6>
         size: 200G
       redundancyPolicy: "SingleRedundancy"
   visualization:
-    type: "kibana"  <6>
+    type: "kibana"  <7>
     kibana:
       replicas: 1
   curation:
-    type: "curator"  <7>
+    type: "curator"
     curator:
-      schedule: "30 3 * * *"
+      schedule: "30 3 * * *" <8>
   collection:
     logs:
-      type: "fluentd"  <8>
+      type: "fluentd"  <9>
       fluentd: {}
 ----
 <1> The name must be `instance`.
 <2> The cluster logging management state. In some cases, if you change the cluster logging defaults, you must set this to `Unmanaged`.
 However, an unmanaged deployment does not receive updates until the cluster logging is placed back into a managed state.
 <3> Settings for configuring Elasticsearch. Using the CR, you can configure shard replication policy and persistent storage.
-<4> Specify the number of Elasticsearch nodes. See the note that follows this list.
-<5> Specify that each Elasticsearch node in the cluster is bound to a Persistent Volume Claim.
-<6> Settings for configuring Kibana. Using the CR, you can scale Kibana for redundancy and configure the CPU and memory for your Kibana nodes. For more information, see *Configuring Kibana*.
-<7> Settings for configuring Curator. Using the CR, you can set the Curator schedule. For more information, see *Configuring Curator*.
-<8> Settings for configuring Fluentd. Using the CR, you can configure Fluentd CPU and memory limits. For more information, see *Configuring Fluentd*.
-endif::[]
+<4> Specify the length of time that Elasticsearch should retain each log source. Enter an integer and a time designation: weeks(w), hours(h/H), minutes(m) and seconds(s). For example, `7d` for seven days. Logs older than the `maxAge` are deleted. You must specify a retention policy for each log source or the Elasticsearch indices will not be created for that source.
+<5> Specify the number of Elasticsearch nodes. See the note that follows this list.
+<6> Enter the name of an existing StorageClass for Elasticsearch storage. For best performance, specify a StorageClass that allocates block storage. If you do not specify a StorageClass, {product-title} deploys cluster logging with ephemeral storage only.
+<7> Settings for configuring Kibana. Using the CR, you can scale Kibana for redundancy and configure the CPU and memory for your Kibana nodes. For more information, see *Configuring Kibana*.
+<8> Settings for configuring the Curator schedule. Curator is used to remove data that is in the Elasticsearch index format prior to {product-title} 4.5 and will be removed in a later release.
+<9> Settings for configuring Fluentd. Using the CR, you can configure Fluentd CPU and memory limits. For more information, see *Configuring Fluentd*.
 +
 [NOTE]
 +
@@ -197,9 +217,14 @@ The maximum number of Elasticsearch master nodes is three. If you specify a `nod
 
 For example, if `nodeCount=4`, the following nodes are created:
 
+[source,terminal]
 ----
 $ oc get deployment
+----
 
+.Example output
+[source,terminal]
+----
 cluster-logging-operator       1/1     1            1           18h
 elasticsearch-cd-x6kdekli-1    0/1     1            0           6m54s
 elasticsearch-cdm-x6kdekli-1   1/1     1            1           18h
@@ -210,8 +235,7 @@ elasticsearch-cdm-x6kdekli-3   0/1     1            0           6m44s
 The number of primary shards for the index templates is equal to the number of Elasticsearch data nodes.
 ====
 
-.. Click *Create*. This creates the Cluster Logging Custom Resource and Elasticsearch Custom Resource, which you
-can edit to make changes to your cluster logging cluster.
+.. Click *Create*. This creates the Cluster Logging components, the Elasticsearch Custom Resource and components, and the Kibana interface.
 
 . Verify the install:
 

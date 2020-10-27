@@ -8,11 +8,6 @@
 :toc: macro
 :toc-title:
 
-NOTE: The guidelines in this branch are specific for OpenShift / OKD 4.x
-documentation. See the
-link:https://github.com/openshift/openshift-docs/tree/master-3/contributing_to_docs[`master-3` branch]
-for guidelines for OpenShift / OKD 3.x documentation.
-
 toc::[]
 
 == Usage of OpenShift terms
@@ -141,6 +136,24 @@ used interchangeably with "container-based."
 
 Usage: container group
 
+''''
+=== custom resource
+
+Usage: custom resource (CR)
+
+A resource implemented through the Kubernetes CustomResourceDefinition API. A custom resource is distinct from the built-in Kubernetes resources, such as the Pod and Service resources. Every CR is part of an API group.
+
+Do not capitalize.
+
+''''
+=== CustomResourceDefinition
+
+Usage: CustomResourceDefinition
+
+API object. Create a CustomResourceDefinition object to define a new custom resource.
+
+This is commonly abbreviated as a CRD.
+
 == D
 
 ''''
@@ -190,6 +203,24 @@ Open the [filename]#Dockerfile# and make the following changes.
 Create a [filename]#Dockerfile# at the root of your repository.
 ====
 
+== E
+
+''''
+=== event
+
+Usage: event(s)
+
+An event is a data record expressing an occurrence and its context, based on the CNCF CloudEvents specification.
+Events contain two types of information: the event data representing the occurrence, and the context metadata providing contextual information about the occurrence.
+Events are routed from an event producer, or source, to connected event consumers.
+
+Routing can be performed based on information contained in the event, but an event will not identify a specific routing destination.
+Events can be delivered through various industry standard protocols such as HTTP, AMQP, MQTT, or SMTP, or through messaging and broker systems, such as Kafka, NATS, AWS Kinesis, or Azure Event Grid.
+
+Although Events are a Kubernetes Metadata API object, this term is not commonly capitalized in documentation.
+// NOTE: This is inconsistently used, e.g. https://docs.openshift.com/container-platform/4.5/rest_api/metadata_apis/event-core-v1.html
+See: link:https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#event-v1-core[Event v1 core API], link:https://github.com/cloudevents/spec/blob/master/primer.md#cloudevents-concepts[CloudEvents concepts], and link:https://github.com/cloudevents/spec/blob/master/spec.md#event[CloudEvents specification].
+
 == I
 
 ''''
@@ -197,7 +228,7 @@ Create a [filename]#Dockerfile# at the root of your repository.
 
 Usage: identity or identities as appropriate
 
-Both the username and list of groups the user belongs to.
+Both the user name and list of groups the user belongs to.
 
 ''''
 === image
@@ -231,6 +262,16 @@ Usage: Ingress Controller(s)
 
 A resource that forwards traffic to endpoints of Services. The Ingress Controller
 replaces router from {product-title} 3 and earlier.
+
+''''
+=== installer-provisioned infrastructure
+
+Usage: installer-provisioned infrastructure
+
+If the installation program deploys and configures the infrastructure that the
+cluster runs on, it is an installer-provisioned infrastructure installation.
+
+Do not use: IPI
 
 == K
 
@@ -306,13 +347,10 @@ allowed for use across all distribution documentation:
 
 Usage: OpenShift CLI (`oc`)
 
-The `oc` tool is the command line interface of OpenShift 3 and 4.
+The `oc` tool is the command-line interface of OpenShift 3 and 4.
 
 When referencing as a prerequisite for a procedure module, use the following
-construction: Install the OpenShift Command-line Interface (CLI), commonly known
-as `oc`.
-
-When referencing in overview text, use: OpenShift CLI (`oc`).
+construction: Install the OpenShift CLI (`oc`).
 
 ''''
 === OpenShift master
@@ -515,5 +553,18 @@ non-namespaced; the name of the StorageClass according to etcd is in
 ObjectMeta.Name.
 
 See link:https://kubernetes.io/docs/concepts/storage/storage-classes/[Storage Classes - Kubernetes].
+
+== U
+
+''''
+=== user-provisioned infrastructure
+
+Usage: user-provisioned infrastructure
+
+If the user must deploy and configure separate virtual or physical hosts as part of
+the cluster deployment process, it is a user-provisioned infrastructure
+installation.
+
+Do not use: UPI
 
 ''''

@@ -1,6 +1,7 @@
 // Module included in the following assemblies:
 //
-// * authentication/encrypting-etcd.adoc
+// * security/encrypting-etcd.adoc
+// * post_installation_configuration/cluster-tasks.adoc
 
 [id="about-etcd_{context}"]
 = About etcd encryption

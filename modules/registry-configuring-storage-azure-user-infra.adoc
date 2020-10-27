@@ -22,11 +22,16 @@ cloud credentials.
 
 . Fill in the storage configuration in `configs.imageregistry.operator.openshift.io/cluster`:
 +
+[source,terminal]
 ----
 $ oc edit configs.imageregistry.operator.openshift.io/cluster
-
+----
++
+.Example configuration
+[source,yaml]
+----
 storage:
   azure:
-    accountName: <account-name>
+    accountName: <storage-account-name>
     container: <container-name>
 ----

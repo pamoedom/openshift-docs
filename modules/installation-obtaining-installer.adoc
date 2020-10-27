@@ -3,11 +3,13 @@
 // * installing/installing_aws/installing-aws-user-infra.adoc
 // * installing/installing_aws/installing-aws-customizations.adoc
 // * installing/installing_aws/installing-aws-default.adoc
+// * installing/installing_aws/installing-aws-government-region.adoc
 // * installing/installing_aws/installing-aws-network-customizations.adoc
 // * installing/installing_aws/installing-aws-private.adoc
 // * installing/installing_aws/installing-aws-vpc.adoc
 // * installing/installing_azure/installing-azure-customizations.adoc
 // * installing/installing_azure/installing-azure-default.adoc
+// * installing/installing_azure/installing-azure-government-region.adoc
 // * installing/installing_azure/installing-azure-private.adoc
 // * installing/installing_azure/installing-azure-vnet.adoc
 // * installing/installing_azure/installing-azure-user-infra.adoc
@@ -20,6 +22,9 @@
 // * installing/installing_openstack/installing-openstack-installer-kuryr.adoc
 // * installing/installing_openstack/installing-openstack-installer.adoc
 // * installing/installing_vsphere/installing-vsphere.adoc
+// * installing/installing_vsphere/installing-vsphere-installer-provisioned.adoc
+// * installing/installing_vsphere/installing-vsphere-installer-provisioned-customizations.adoc
+// * installing/installing_vsphere/installing-vsphere-installer-provisioned-network-customizations.adoc
 // * installing/installing_ibm_z/installing-ibm-z.adoc
 // * installing/installing_rhv/installing-rhv-default.adoc
 // * installing/installing_rhv/installing-rhv-customizations.adoc
@@ -33,7 +38,7 @@ endif::[]
 
 Before you install {product-title}, download the installation file on
 ifdef::restricted[]
- the bastion host.
+the mirror host.
 endif::restricted[]
 ifndef::restricted[]
 ifdef::ibm-z[ your provisioning machine.]
@@ -63,10 +68,19 @@ The installation program creates several files on the computer that you use to
 install your cluster. You must keep both the installation program and the files
 that the installation program creates after you finish installing the cluster.
 ====
++
+[IMPORTANT]
+====
+Deleting the files created by the installation program does not remove your
+cluster, even if the cluster failed during installation. You must complete the
+{product-title} uninstallation procedures outlined for your specific cloud
+provider to remove your cluster entirely.
+====
 
 . Extract the installation program. For example, on a computer that uses a Linux
 operating system, run the following command:
 +
+[source,terminal]
 ----
 $ tar xvf <installation_program>.tar.gz
 ----

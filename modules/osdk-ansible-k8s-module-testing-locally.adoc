@@ -10,15 +10,30 @@ local machine as opposed to running and rebuilding the Operator each time.
 
 .Procedure
 
+. Install the `community.kubernetes` collection:
++
+[source,terminal]
+----
+$ ansible-galaxy collection install community.kubernetes
+----
+
 . Initialize a new Ansible-based Operator project:
 +
+[source,terminal]
 ----
-$ operator-sdk new --type ansible --kind Foo --api-version foo.example.com/v1alpha1 foo-operator
+$ operator-sdk new --type ansible \
+    --kind Foo \
+    --api-version foo.example.com/v1alpha1 foo-operator
+----
++
+.Example output
+[source,terminal]
+----
 Create foo-operator/tmp/init/galaxy-init.sh
 Create foo-operator/tmp/build/Dockerfile
 Create foo-operator/tmp/build/test-framework/Dockerfile
 Create foo-operator/tmp/build/go-test.sh
-Rendering Ansible Galaxy role [foo-operator/roles/Foo]...
+Rendering Ansible Galaxy role [foo-operator/roles/foo]...
 Cleaning up foo-operator/tmp/init
 Create foo-operator/watches.yaml
 Create foo-operator/deploy/rbac.yaml
@@ -30,6 +45,7 @@ Initialized empty Git repository in /home/dymurray/go/src/github.com/dymurray/op
 Run git init done
 ----
 +
+[source,terminal]
 ----
 $ cd foo-operator
 ----
@@ -39,8 +55,8 @@ This example creates and deletes a namespace with the switch of a variable.
 +
 [source,yaml]
 ----
-- name: set test namespace to {{ state }}
-  k8s:
+- name: set test namespace to "{{ state }}"
+  community.kubernetes.k8s:
     api_version: v1
     kind: Namespace
     state: "{{ state }}"
@@ -58,19 +74,25 @@ state: present
 ----
 
 . Create an Ansible playbook `playbook.yml` in the top-level directory, which
-includes the `Foo` role:
+includes the `foo` role:
 +
 [source,yaml]
 ----
 - hosts: localhost
   roles:
-    - Foo
+    - foo
 ----
 
 . Run the playbook:
 +
+[source,terminal]
 ----
 $ ansible-playbook playbook.yml
+----
++
+.Example output
+[source,terminal]
+----
  [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
 
 PLAY [localhost] ***************************************************************************
@@ -78,7 +100,7 @@ PLAY [localhost] ***************************************************************
 PROCEDURE [Gathering Facts] *********************************************************************
 ok: [localhost]
 
-Task [Foo : set test namespace to present]
+Task [foo : set test namespace to present]
 changed: [localhost]
 
 PLAY RECAP *********************************************************************************
@@ -87,8 +109,14 @@ localhost                  : ok=2    changed=1    unreachable=0    failed=0
 
 . Check that the namespace was created:
 +
+[source,terminal]
 ----
 $ oc get namespace
+----
++
+.Example output
+[source,terminal]
+----
 NAME          STATUS    AGE
 default       Active    28d
 kube-public   Active    28d
@@ -98,8 +126,14 @@ test          Active    3s
 
 . Rerun the playbook setting `state` to `absent`:
 +
+[source,terminal]
 ----
 $ ansible-playbook playbook.yml --extra-vars state=absent
+----
++
+.Example output
+[source,terminal]
+----
  [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
 
 PLAY [localhost] ***************************************************************************
@@ -107,7 +141,7 @@ PLAY [localhost] ***************************************************************
 PROCEDURE [Gathering Facts] *********************************************************************
 ok: [localhost]
 
-Task [Foo : set test namespace to absent]
+Task [foo : set test namespace to absent]
 changed: [localhost]
 
 PLAY RECAP *********************************************************************************
@@ -116,8 +150,14 @@ localhost                  : ok=2    changed=1    unreachable=0    failed=0
 
 . Check that the namespace was deleted:
 +
+[source,terminal]
 ----
 $ oc get namespace
+----
++
+.Example output
+[source,terminal]
+----
 NAME          STATUS    AGE
 default       Active    28d
 kube-public   Active    28d

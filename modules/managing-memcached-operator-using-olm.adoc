@@ -3,14 +3,14 @@
 // * operators/operator_sdk/osdk-getting-started.adoc
 
 [id="managing-memcached-operator-using-olm_{context}"]
-= Managing a Go-based Operator using the Operator Lifecycle Manager
+= Managing a Go-based Operator using Operator Lifecycle Manager
 
 The previous section has covered manually running an Operator. In the next
-sections, we will explore using the Operator Lifecycle Manager (OLM), which is
-what enables a more robust deployment model for Operators being run in
-production environments.
+sections, we will explore using Operator Lifecycle Manager (OLM), which is what
+enables a more robust deployment model for Operators being run in production
+environments.
 
-The OLM helps you to install, update, and generally manage the lifecycle of all
+OLM helps you to install, update, and generally manage the lifecycle of all
 of the Operators (and their associated services) on a Kubernetes cluster. It
 runs as an Kubernetes extension and lets you use `oc` for all the lifecycle
 management functions without any additional tools.
@@ -28,11 +28,12 @@ Preview OLM enabled
 +
 An Operator manifest describes how to display, create, and manage the
 application, in this case Memcached, as a whole. It is defined by a
-`ClusterServiceVersion` (CSV) object and is required for the OLM to function.
+`ClusterServiceVersion` (CSV) object and is required for OLM to function.
 +
 From the `memcached-operator/` directory that was created when you built the
 Memcached Operator, generate the CSV manifest:
 +
+[source,terminal]
 ----
 $ operator-sdk generate csv --csv-version 0.0.1
 ----
@@ -65,6 +66,7 @@ directory by the Operator SDK when you built the Memcached Operator.
 
 .. Apply the Operator's CSV manifest to the specified namespace in the cluster:
 +
+[source,terminal]
 ----
 $ oc apply -f deploy/olm-catalog/memcached-operator/0.0.1/memcached-operator.v0.0.1.clusterserviceversion.yaml
 ----
@@ -76,14 +78,27 @@ it does not yet meet the requirements specified in the manifest.
 permissions to the Operator, and the Custom Resource Definition (CRD) to create
 the Memcached type that the Operator manages:
 +
+[source,terminal]
 ----
 $ oc create -f deploy/crds/cache.example.com_memcacheds_crd.yaml
+----
++
+[source,terminal]
+----
 $ oc create -f deploy/service_account.yaml
+----
++
+[source,terminal]
+----
 $ oc create -f deploy/role.yaml
+----
++
+[source,terminal]
+----
 $ oc create -f deploy/role_binding.yaml
 ----
 +
-Because the OLM creates Operators in a particular namespace when a manifest is
+Because OLM creates Operators in a particular namespace when a manifest is
 applied, administrators can leverage the native Kubernetes RBAC permission model
 to restrict which users are allowed to install Operators.
 
@@ -96,10 +111,11 @@ resource has the kind `Memcached`. Native Kubernetes RBAC also applies to
 each Operator.
 +
 Creating instances of Memcached in this namespace will now trigger the Memcached
-Operator to instantiate pods running the memcached server that are managed by
+Operator to instantiate Pods running the memcached server that are managed by
 the Operator. The more `CustomResources` you create, the more unique instances
 of Memcached are managed by the Memcached Operator running in this namespace.
 +
+[source,terminal]
 ----
 $ cat <<EOF | oc apply -f -
 apiVersion: "cache.example.com/v1alpha1"
@@ -109,7 +125,10 @@ metadata:
 spec:
   size: 1
 EOF
-
+----
++
+[source,terminal]
+----
 $ cat <<EOF | oc apply -f -
 apiVersion: "cache.example.com/v1alpha1"
 kind: "Memcached"
@@ -118,38 +137,80 @@ metadata:
 spec:
   size: 1
 EOF
-
+----
++
+[source,terminal]
+----
 $ oc get Memcached
+----
++
+.Example output
+[source,terminal]
+----
 NAME                      AGE
 memcached-for-drupal      22s
 memcached-for-wordpress   27s
-
+----
++
+[source,terminal]
+----
 $ oc get pods
+----
++
+.Example output
+[source,terminal]
+----
 NAME                                       READY     STATUS    RESTARTS   AGE
 memcached-app-operator-66b5777b79-pnsfj    1/1       Running   0          14m
 memcached-for-drupal-5476487c46-qbd66      1/1       Running   0          3s
 memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          8s
 ----
 
+////
+This procedure no longer works. The original CSV that was linked 404'd now, but
+the newer one doesn't have a replaces field. Removing the step until a working
+replacement is developed.
+
 . *Update an application.*
 +
 Manually apply an update to the Operator by creating a new Operator manifest
-with a `replaces` field that references the old Operator manifest. The OLM
+with a `replaces` field that references the old Operator manifest. OLM
 ensures that all resources being managed by the old Operator have their
 ownership moved to the new Operator without fear of any programs stopping
 execution. It is up to the Operators themselves to execute any data migrations
 required to upgrade resources to run under a new version of the Operator.
 +
-The following command demonstrates applying a new
-link:https://github.com/operator-framework/getting-started/blob/master/memcachedoperator.0.0.2.csv.yaml[Operator manifest file]
-using a new version of the Operator and shows that the pods remain executing:
+The following commands demonstrate applying a new Operator manifest file using a
+new version of the Operator and shows that the Pods remain executing:
+
+.. Download the manifest:
 +
+[source,terminal]
 ----
-$ curl -Lo memcachedoperator.0.0.2.csv.yaml https://raw.githubusercontent.com/operator-framework/getting-started/master/memcachedoperator.0.0.2.csv.yaml
-$ oc apply -f memcachedoperator.0.0.2.csv.yaml
+$ curl -Lo memcachedoperator.0.18.1.csv.yaml \
+    https://raw.githubusercontent.com/operator-framework/operator-sdk-samples/master/go/memcached-operator/deploy/olm-catalog/memcached-operator/manifests/memcached-operator.clusterserviceversion.yaml
+----
+
+.. Create the object:
++
+[source,terminal]
+----
+$ oc apply -f memcachedoperator.0.18.1.csv.yaml
+----
+
+.. View the Pods:
++
+[source,terminal]
+----
 $ oc get pods
+----
++
+.Example output
+[source,terminal]
+----
 NAME                                       READY     STATUS    RESTARTS   AGE
 memcached-app-operator-66b5777b79-pnsfj    1/1       Running   0          3s
 memcached-for-drupal-5476487c46-qbd66      1/1       Running   0          14m
 memcached-for-wordpress-65b75fd8c9-7b9x7   1/1       Running   0          14m
 ----
+////

@@ -1,5 +1,5 @@
 // Module included in the following assemblies:
-// * assembly/images
+//  * openshift_images/templates-ruby-on-rails.adoc
 
 [id="templates-rails-creating-route-for-application_{context}"]
 = Creating a route for your application
@@ -13,6 +13,7 @@ ifdef::openshift-enterprise,openshift-webscale,openshift-origin,openshift-dedica
 `www.example.com` use {product-title} route. In your case you need
 to expose the frontend service by typing:
 +
+[source,terminal]
 ----
 $ oc expose service rails-app --hostname=www.example.com
 ----
@@ -23,6 +24,7 @@ ifdef::openshift-online[]
 
 * Expose the frontend service by typing:
 +
+[source,terminal]
 ----
 $ oc expose service rails-app
 ----
